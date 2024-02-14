@@ -54,7 +54,7 @@ const AddMemberForm = () => {
       <Separator />
 
       <Form {...form}>
-        <form
+      <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full  xl:w-2/3"
         >

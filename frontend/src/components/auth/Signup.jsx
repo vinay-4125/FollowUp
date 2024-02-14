@@ -58,25 +58,26 @@ const Signup = () => {
       flex items-center justify-center"
       >
         <div className="w-full h-100">
-          <div>
-            <Link to="/">
-              <a className="flex group text-blue-500 hover:text-blue-700 font-semibold">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 group-hover:animate-pulse"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M7 16l-4-4m0 0l4-4m-4 4h18"
-                  />
-                </svg>
-                <span className="px-2">Home</span>
-              </a>
+          <div className="inline-block">
+            <Link
+              to="/"
+              className="flex group text-blue-500 hover:text-blue-700 font-semibold"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 group-hover:animate-pulse"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M7 16l-4-4m0 0l4-4m-4 4h18"
+                />
+              </svg>
+              <span className="px-2">Home</span>
             </Link>
           </div>
           <h1 className="text-xl md:text-2xl font-bold leading-tight mt-12">

@@ -20,6 +20,9 @@ import AddMember from "./components/dashboard/AddMember/AddMember.jsx";
 import EventList from "./components/dashboard/EventList/EventList.jsx";
 import NotFound from "./components/NotFound.jsx";
 import AddMemberForm from "./components/dashboard/AddMember/AddMemberForm.jsx";
+import ForgetPassword from "./components/auth/ForgetPassword.jsx";
+import NewInput from "./components/auth/NewInput.jsx";
+import ResetPassword from "./components/auth/ResetPassword.jsx";
 
 let persistor = persistStore(store);
 
@@ -42,14 +45,20 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
       <Route path="/" element={<App />} />
+
       <Route path="/login" element={<Login />} />
+      <Route path="/login/forgetpassword" element={<ForgetPassword />} />
+      <Route path="/reset-password/:id" element={<ResetPassword />} />
+      <Route path="/newinput" element={<NewInput />} />
       <Route path="/signup" element={<Signup />} />
+
       <Route path="/dashboard" element={<Dashboard />}>
         <Route path="addmember" element={<AddMember />} />
         <Route path="addmember/new" element={<AddMemberForm />} />
         <Route path="eventlist" element={<EventList />} />
         <Route path="*" element={<NotFound />} />
       </Route>
+      <Route path="*" element={<NotFound />} />
     </Route>
   )
 );

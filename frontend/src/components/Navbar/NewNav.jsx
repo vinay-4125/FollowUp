@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Menu } from "lucide-react";
 import { useState } from "react";
+import ThemeToggle from "../ThemeToggle";
 
 const NewNav = () => {
   const [state, setState] = useState(false);
@@ -46,7 +47,7 @@ const NewNav = () => {
     //     </div>
     //   </div>
     // </nav>
-    <nav className="bg-white w-full">
+    <nav className="w-full my-5">
       <div className="items-center px-4 max-w-screen-xl mx-auto md:flex md:px-8">
         <div className="flex items-center justify-between md:block">
           <Link to="/">
@@ -61,6 +62,7 @@ const NewNav = () => {
             </Button>
           </div>
         </div>
+        <h1>Hello</h1>
         <div
           className={`flex-1 justify-self-center pb-3 mt-8 md:block md:pb-0 md:mt-0 ${
             state ? "block" : "hidden"
@@ -74,6 +76,9 @@ const NewNav = () => {
                 </Link>
               </li>
             ))}
+            <li>
+              <ThemeToggle />
+            </li>
           </ul>
         </div>
       </div>
