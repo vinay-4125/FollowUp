@@ -23,6 +23,10 @@ import AddMemberForm from "./components/dashboard/AddMember/AddMemberForm.jsx";
 import ForgetPassword from "./components/auth/ForgetPassword.jsx";
 import NewInput from "./components/auth/NewInput.jsx";
 import ResetPassword from "./components/auth/ResetPassword.jsx";
+import Settings from "./components/dashboard/Settings/Settings.jsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import UpdateMember from "./components/dashboard/AddMember/UpdateMember.jsx";
+import DashboardBody from "./components/dashboard/DashboardBody.jsx";
 
 let persistor = persistStore(store);
 
@@ -53,9 +57,12 @@ const router = createBrowserRouter(
       <Route path="/signup" element={<Signup />} />
 
       <Route path="/dashboard" element={<Dashboard />}>
+        <Route path="main" element={<DashboardBody />} />
         <Route path="addmember" element={<AddMember />} />
         <Route path="addmember/new" element={<AddMemberForm />} />
+        <Route path="update/:id" element={<UpdateMember />} />
         <Route path="eventlist" element={<EventList />} />
+        <Route path="settings" element={<Settings />} />
         <Route path="*" element={<NotFound />} />
       </Route>
       <Route path="*" element={<NotFound />} />
@@ -63,14 +70,18 @@ const router = createBrowserRouter(
   )
 );
 
+const queryClient = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <RouterProvider router={router} />
-        </PersistGate>
-      </Provider>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <RouterProvider router={router} />
+          </PersistGate>
+        </Provider>
+      </QueryClientProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

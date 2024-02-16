@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { addItem } from "../../redux/slice/userSlice";
 import { Button } from "../ui/button";
+import { Toaster, toast } from "sonner";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -117,7 +117,9 @@ const Login = () => {
                 <Button
                   //       className="w-full block bg-indigo-500 hover:bg-indigo-400 focus:bg-indigo-400 text-white font-semibold rounded-lg
                   // px-4 py-3 mt-6"
-                  className="w-full block px-4 mt-6"
+                  // className="w-full block px-4 mt-6"
+                  className="w-full p-6 mt-6"
+
                 >
                   Log In
                 </Button>
@@ -177,7 +179,7 @@ const Login = () => {
             </div>
           </div>
         </section>
-        <Toaster />
+        <Toaster richColors position="bottom-left"/>
       </div>
     </>
   );

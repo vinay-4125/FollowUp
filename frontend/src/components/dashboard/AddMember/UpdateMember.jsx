@@ -1,3 +1,4 @@
+import { useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,7 +20,7 @@ import { Toaster, toast } from "sonner";
 import axios from "axios";
 const breadcrumbItems = [
   { title: "Member", link: "/dashboard/addmember" },
-  { title: "Add", link: "/dashboard/addmember/new" },
+  { title: "Update", link: "/dashboard/addmember/update" },
 ];
 
 const formSchema = z.object({
@@ -30,34 +31,40 @@ const formSchema = z.object({
   phonenumber: z.string().min(10).max(10),
 });
 
-const AddMemberForm = () => {
+const UpdateMember = () => {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+
   const form = useForm({
     defaultValues: {
-      firstname: "",
-      lastname: "",
-      email: "",
-      phonenumber: "",
-      slackId: "",
+      firstname: state.firstname,
+      lastname: state.lastname,
+      email: state.email,
+      phonenumber: state.phonenumber,
+      slackId: state.slackId,
     },
     model: "all",
     resolver: zodResolver(formSchema),
   });
 
   const onSubmit = async (data) => {
+    const finalData = { ...data, _id: state._id };
     try {
-      const res = await axios.post("/api/addmember", data);
-      toast.success("Member added");
+      const res = await axios.put("/api/updatemember", finalData);
+      toast.success("Member updated");
+      navigate("/dashboard/addmember");
     } catch (error) {
       console.log(error);
       toast.error(error.message);
     }
   };
+  //   console.log("state", state);
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <BreadCrumb items={breadcrumbItems} />
 
       <div className="flex items-start justify-between">
-        <Heading title={`Add Member`} description={""} />
+        <Heading title={`Update Member`} description={""} />
       </div>
       <Separator />
 
@@ -150,7 +157,7 @@ const AddMemberForm = () => {
             />
           </div>
 
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Update</Button>
         </form>
       </Form>
       <pre>{JSON.stringify(form.watch(), null, 2)}</pre>
@@ -159,4 +166,4 @@ const AddMemberForm = () => {
   );
 };
 
-export default AddMemberForm;
+export default UpdateMember;

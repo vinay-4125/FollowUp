@@ -62,7 +62,6 @@ const NewNav = () => {
             </Button>
           </div>
         </div>
-        <h1>Hello</h1>
         <div
           className={`flex-1 justify-self-center pb-3 mt-8 md:block md:pb-0 md:mt-0 ${
             state ? "block" : "hidden"

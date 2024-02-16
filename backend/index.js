@@ -5,7 +5,7 @@ const cookiePraser = require("cookie-parser");
 const userAuthRoutes = require("./routes/userRoutes");
 const { userVerification } = require("./middleware/userMiddleware");
 const reminderRoutes = require("./routes/reminderRoutes");
-
+const memberRoutes = require("./routes/memberRoutes");
 const PORT = process.env.PORT;
 const dbURL = process.env.MONGODBURL;
 
@@ -16,6 +16,7 @@ app.use(express.json());
 app.use(cookiePraser());
 app.use("/api/auth", userAuthRoutes);
 app.use("/api", reminderRoutes);
+app.use("/api", memberRoutes);
 
 app.get("/", (req, res) => res.send("HOMEPAGE"));
 app.get("/dashboard", userVerification, (req, res) => {

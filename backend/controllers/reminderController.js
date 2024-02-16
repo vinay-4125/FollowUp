@@ -1,7 +1,6 @@
 const agenda = require("../lib/agenda");
 const Reminder = require("../models/reminderModel");
 
-
 module.exports.reminder = async (req, res) => {
   try {
     const {
@@ -13,6 +12,15 @@ module.exports.reminder = async (req, res) => {
       date,
       eventName,
     } = req.body;
+    console.log({
+      notification,
+      listMembers,
+      repeat,
+      message,
+      time,
+      date,
+      eventName,
+    });
     if (
       !(
         notification &&
@@ -51,5 +59,3 @@ module.exports.reminder = async (req, res) => {
     res.status(400).json({ err });
   }
 };
-
-

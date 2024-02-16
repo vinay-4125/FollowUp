@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { addItem } from "../../redux/slice/userSlice";
 import { Button } from "../ui/button";
+import { Toaster, toast } from "sonner";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -129,7 +129,7 @@ const Signup = () => {
             </div>
             <Button
               type="submit"
-              className="w-full block px-4 mt-10"
+              className="w-full p-6 mt-10"
 
               // className="w-full block bg-indigo-500 hover:bg-indigo-400 focus:bg-indigo-400 text-white font-semibold rounded-lg
               // px-4 py-3 mt-6"

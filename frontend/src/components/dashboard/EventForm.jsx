@@ -3,6 +3,8 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
+import { toast } from "sonner";
+
 import {
   Select,
   SelectContent,
@@ -30,42 +32,60 @@ import {
 } from "../ui/command";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "../ui/scroll-area";
-import axios from "axios";
 import { Textarea } from "../ui/textarea";
-import { Toaster } from "@/components/ui/sonner";
-import { toast } from "sonner";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { Toaster } from "../ui/sonner";
 
 const EventForm = () => {
-  const [frameworks, setFrameworks] = useState([
-    {
-      value: "john",
-      label: "John",
-    },
-    {
-      value: "jane",
-      label: "Jane",
-    },
-    {
-      value: "sam",
-      label: "Sam",
-    },
-    {
-      value: "ron",
-      label: "Ron",
-    },
-    {
-      value: "roy",
-      label: "Roy",
-    },
-    {
-      value: "jack",
-      label: "Jack",
-    },
-    {
-      value: "james",
-      label: "James",
-    },
-  ]);
+  const fetchMembers = async () => {
+    const res = await axios.get("/api/getMemberFullname");
+    const { fullname } = res.data;
+    const formattedData = fullname.map((member) => ({
+      value: `${member.firstname} ${member.lastname}`.toLowerCase(),
+      label: `${member.firstname} ${member.lastname}`,
+    }));
+
+    return formattedData;
+  };
+
+  const { data: frameworkData } = useQuery({
+    queryKey: ["getMembersForEventForm"],
+    queryFn: fetchMembers,
+  });
+
+  const [frameworks, setFrameworks] = useState(frameworkData || []);
+
+  // const [frameworks, setFrameworks] = useState([
+  //   {
+  //     value: "john",
+  //     label: "John",
+  //   },
+  //   {
+  //     value: "jane",
+  //     label: "Jane",
+  //   },
+  //   {
+  //     value: "sam",
+  //     label: "Sam",
+  //   },
+  //   {
+  //     value: "ron",
+  //     label: "Ron",
+  //   },
+  //   {
+  //     value: "roy",
+  //     label: "Roy",
+  //   },
+  //   {
+  //     value: "jack",
+  //     label: "Jack",
+  //   },
+  //   {
+  //     value: "james",
+  //     label: "James",
+  //   },
+  // ]);
 
   const [members, setMembers] = useState([]);
 
@@ -218,6 +238,7 @@ const EventForm = () => {
                   placeholder="Type your message here."
                   id="message"
                   name="message"
+                  className="resize-none"
                   onChange={handleChange}
                 />
               </div>
@@ -284,34 +305,35 @@ const EventForm = () => {
                           <CommandEmpty>No member found.</CommandEmpty>
                           <CommandGroup>
                             <ScrollArea className="h-48 w-48 rounded-md border">
-                              {frameworks.map((framework) => (
-                                <div key={framework.value}>
-                                  <CommandItem
-                                    key={framework.value}
-                                    value={framework.value}
-                                    onSelect={(currentValue) => {
-                                      setValue(
-                                        currentValue === value
-                                          ? ""
-                                          : currentValue
-                                      );
-                                      setOpen(false);
-                                      //   setMembers((prev) => [...prev, currentValue]);
-                                      handleSelectFramework(currentValue);
-                                    }}
-                                  >
-                                    <Check
-                                      className={cn(
-                                        "mr-2 h-4 w-4",
-                                        value === framework.value
-                                          ? "opacity-100"
-                                          : "opacity-0"
-                                      )}
-                                    />
-                                    {framework.label}
-                                  </CommandItem>
-                                </div>
-                              ))}
+                              {frameworkData &&
+                                frameworks.map((framework) => (
+                                  <div key={framework.value}>
+                                    <CommandItem
+                                      key={framework.value}
+                                      value={framework.value}
+                                      onSelect={(currentValue) => {
+                                        setValue(
+                                          currentValue === value
+                                            ? ""
+                                            : currentValue
+                                        );
+                                        setOpen(false);
+                                        //   setMembers((prev) => [...prev, currentValue]);
+                                        handleSelectFramework(currentValue);
+                                      }}
+                                    >
+                                      <Check
+                                        className={cn(
+                                          "mr-2 h-4 w-4",
+                                          value === framework.value
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        )}
+                                      />
+                                      {framework.label}
+                                    </CommandItem>
+                                  </div>
+                                ))}
                             </ScrollArea>
                           </CommandGroup>
                         </Command>
@@ -423,8 +445,7 @@ const EventForm = () => {
           </div>
         </DialogContent>
       </Dialog>
-      <Toaster />
-      {/* <Toaster position="bottom-left" /> */}
+      <Toaster position="top-left" />
     </>
   );
 };

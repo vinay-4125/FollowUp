@@ -4,6 +4,7 @@ import { useTheme } from "../ThemeProvider";
 import { MobileSidebar } from "./MobileSidebar";
 import EventForm from "./EventForm";
 import ThemeToggle from "../ThemeToggle";
+import EventFormOne from "./EventFormOne";
 
 const DashboardHeader = () => {
 
@@ -36,7 +37,7 @@ const DashboardHeader = () => {
         <div className="flex items-center gap-2">
           {/* <UserNav /> */}
           <EventForm />
-          {/* <EventFormOne /> */}
+          <EventFormOne />
           <ThemeToggle />
         </div>
       </nav>

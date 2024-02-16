@@ -1,43 +1,85 @@
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { Plus } from "lucide-react";
+import { Edit, MoreHorizontal, Plus, Trash, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import BreadCrumb from "../Breadcrumb";
-import { useMemo } from "react";
-
-import movies from "./MOVIE_DATA.json";
 import MemberTable from "./MemberTable";
 import MemberAction from "./MemberAction";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const breadcrumbItems = [{ title: "Member", link: "/dashboard/Member" }];
 
 const AddMember = () => {
-  const data = useMemo(() => movies, []);
+  // const data = useMemo(() => movies, []);
+  const fetchMembers = async () => {
+    const res = await axios.get("/api/getmembers");
+    return res.data.member;
+  };
 
-  const movieColumns = [
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["getMembers"],
+    queryFn: fetchMembers,
+  });
+
+  const memberColumn = [
     {
-      header: "ID",
-      accessorKey: "id",
+      header: "Firstname",
+      accessorKey: "firstname",
     },
     {
-      header: "Name",
-      accessorKey: "name",
+      header: "Lastname",
+      accessorKey: "lastname",
     },
     {
-      header: "Genre",
-      accessorKey: "genre",
+      header: "Email",
+      accessorKey: "email",
     },
     {
-      header: "Rating",
-      accessorKey: "rating",
+      header: "Phonenumber",
+      accessorKey: "phonenumber",
+    },
+    {
+      header: "Slack-ID",
+      accessorKey: "slackId",
     },
     {
       id: "actions",
       cell: ({ row }) => <MemberAction data={row.original} />,
     },
   ];
+  // const movieColumns = [
+  //   {
+  //     header: "ID",
+  //     accessorKey: "id",
+  //   },
+  //   {
+  //     header: "Name",
+  //     accessorKey: "name",
+  //   },
+  //   {
+  //     header: "Genre",
+  //     accessorKey: "genre",
+  //   },
+  //   {
+  //     header: "Rating",
+  //     accessorKey: "rating",
+  //   },
+  //   {
+  //     id: "actions",
+  //     cell: ({ row }) => <MemberAction data={row.original} />,
+  //   },
+  // ];
 
   return (
     <>
@@ -46,7 +88,7 @@ const AddMember = () => {
 
         <div className="flex items-start justify-between">
           <Heading
-            title={`Members ${data.length}`}
+            title={`Members ${data?.length}`}
             description="Manage members"
           />
 
@@ -58,8 +100,7 @@ const AddMember = () => {
           </Link>
         </div>
         <Separator />
-
-        <MemberTable data={data} columns={movieColumns} />
+        {data && <MemberTable data={data} columns={memberColumn} />}
       </div>
     </>
   );
