@@ -1,11 +1,11 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import * as yup from "yup";
 
-const formSchema = z.object({
-  username: z.string(),
-  email: z.string().email(),
-  password: z
+const formSchema = yup.object({
+  username: yup.string(),
+  email: yup.string().email(),
+  password: yup
     .string()
     .min(8, { message: "Password is too short" })
     .max(20, { message: "Password is too long" }),
@@ -19,11 +19,9 @@ const NewInput = () => {
       password: "",
     },
     mode: "all",
-    resolver: zodResolver(formSchema),
+    resolver: yupResolver(formSchema),
   });
-  return <>
-    
-  </>;
+  return <></>;
 };
 
 export default NewInput;

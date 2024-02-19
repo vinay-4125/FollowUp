@@ -8,8 +8,8 @@ const Navbar = () => {
   //   state.user.userInfo.user?.userInfo;
   // });
   // console.log("userinfo", user);
-  const { username } = useSelector((state) => state.user?.userInfo);
   console.log("username", username);
+  const username = true; //! changing this line
   return (
     <div>
       <nav className="relative w-full text-gray-700 px-8">

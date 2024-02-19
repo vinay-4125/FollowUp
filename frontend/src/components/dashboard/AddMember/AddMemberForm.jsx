@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -22,12 +22,12 @@ const breadcrumbItems = [
   { title: "Add", link: "/dashboard/addmember/new" },
 ];
 
-const formSchema = z.object({
-  firstname: z.string().min(1),
-  lastname: z.string().min(1),
-  email: z.string().email(),
-  slackId: z.string().min(1),
-  phonenumber: z.string().min(10).max(10),
+const formSchema = yup.object({
+  firstname: yup.string().min(1),
+  lastname: yup.string().min(1),
+  email: yup.string().email(),
+  slackId: yup.string().min(1),
+  phonenumber: yup.string().min(10).max(10),
 });
 
 const AddMemberForm = () => {
@@ -40,12 +40,12 @@ const AddMemberForm = () => {
       slackId: "",
     },
     model: "all",
-    resolver: zodResolver(formSchema),
+    resolver: yupResolver(formSchema),
   });
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post("/api/addmember", data);
+      await axios.post("/api/addmember", data);
       toast.success("Member added");
     } catch (error) {
       console.log(error);

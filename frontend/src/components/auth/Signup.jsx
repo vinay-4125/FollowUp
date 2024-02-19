@@ -1,14 +1,11 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addItem } from "../../redux/slice/userSlice";
 import { Button } from "../ui/button";
 import { Toaster, toast } from "sonner";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -26,7 +23,6 @@ const Signup = () => {
       const res = await axios.post("/api/auth/signup", formData);
       const data = res.data;
       // console.log(data.user);
-      dispatch(addItem(data.user));
       navigate("/");
     } catch (error) {
       const { all, email, password } = error.response.data.error;

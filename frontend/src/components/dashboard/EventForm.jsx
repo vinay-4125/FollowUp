@@ -3,7 +3,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 import {
   Select,
@@ -35,7 +35,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Textarea } from "../ui/textarea";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { Toaster } from "../ui/sonner";
+// import { Toaster } from "../ui/sonner";
 
 const EventForm = () => {
   const fetchMembers = async () => {
@@ -54,38 +54,38 @@ const EventForm = () => {
     queryFn: fetchMembers,
   });
 
-  const [frameworks, setFrameworks] = useState(frameworkData || []);
+  // const [frameworks, setFrameworks] = useState(frameworkData || []);
 
-  // const [frameworks, setFrameworks] = useState([
-  //   {
-  //     value: "john",
-  //     label: "John",
-  //   },
-  //   {
-  //     value: "jane",
-  //     label: "Jane",
-  //   },
-  //   {
-  //     value: "sam",
-  //     label: "Sam",
-  //   },
-  //   {
-  //     value: "ron",
-  //     label: "Ron",
-  //   },
-  //   {
-  //     value: "roy",
-  //     label: "Roy",
-  //   },
-  //   {
-  //     value: "jack",
-  //     label: "Jack",
-  //   },
-  //   {
-  //     value: "james",
-  //     label: "James",
-  //   },
-  // ]);
+  const [frameworks, setFrameworks] = useState([
+    {
+      value: "john",
+      label: "John",
+    },
+    {
+      value: "jane",
+      label: "Jane",
+    },
+    {
+      value: "sam",
+      label: "Sam",
+    },
+    {
+      value: "ron",
+      label: "Ron",
+    },
+    {
+      value: "roy",
+      label: "Roy",
+    },
+    {
+      value: "jack",
+      label: "Jack",
+    },
+    {
+      value: "james",
+      label: "James",
+    },
+  ]);
 
   const [members, setMembers] = useState([]);
 
@@ -183,13 +183,13 @@ const EventForm = () => {
       //   error: <b>Could not save.</b>,
       // });
 
-      toast("Event has been created", {
-        description: res.data.message,
-        action: {
-          label: "Undo",
-          onClick: () => console.log("Undo"), //! To implement undo function to undo the event.
-        },
-      });
+      // toast("Event has been created", {
+      //   description: res.data.message,
+      //   action: {
+      //     label: "Undo",
+      //     onClick: () => console.log("Undo"), //! To implement undo function to undo the event.
+      //   },
+      // });
     } catch (error) {
       console.log(error);
     }
@@ -445,7 +445,7 @@ const EventForm = () => {
           </div>
         </DialogContent>
       </Dialog>
-      <Toaster position="top-left" />
+      {/* <Toaster position="top-left" /> */}
     </>
   );
 };

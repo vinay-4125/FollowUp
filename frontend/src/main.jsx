@@ -2,33 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
-} from "react-router-dom";
-import Login from "./components/auth/Login.jsx";
-import Signup from "./components/auth/Signup.jsx";
-import { Provider } from "react-redux";
-import store from "./redux/store.js";
-import { PersistGate } from "redux-persist/integration/react";
-import { persistStore } from "redux-persist";
-import Dashboard from "./components/dashboard/Dashboard.jsx";
 import { ThemeProvider } from "./components/ThemeProvider.jsx";
-import AddMember from "./components/dashboard/AddMember/AddMember.jsx";
-import EventList from "./components/dashboard/EventList/EventList.jsx";
-import NotFound from "./components/NotFound.jsx";
-import AddMemberForm from "./components/dashboard/AddMember/AddMemberForm.jsx";
-import ForgetPassword from "./components/auth/ForgetPassword.jsx";
-import NewInput from "./components/auth/NewInput.jsx";
-import ResetPassword from "./components/auth/ResetPassword.jsx";
-import Settings from "./components/dashboard/Settings/Settings.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import UpdateMember from "./components/dashboard/AddMember/UpdateMember.jsx";
-import DashboardBody from "./components/dashboard/DashboardBody.jsx";
-
-let persistor = persistStore(store);
+import { AuthContextProvider } from "./context/AuthContext";
+import { BrowserRouter } from "react-router-dom";
 
 // const router = createBrowserRouter([
 //   {
@@ -45,43 +22,42 @@ let persistor = persistStore(store);
 //   },
 // ]);
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route>
-      <Route path="/" element={<App />} />
+// const router = createBrowserRouter(
+//   createRoutesFromElements(
+//     <Route>
+//       <Route path="/" element={<App />} />
 
-      <Route path="/login" element={<Login />} />
-      <Route path="/login/forgetpassword" element={<ForgetPassword />} />
-      <Route path="/reset-password/:id" element={<ResetPassword />} />
-      <Route path="/newinput" element={<NewInput />} />
-      <Route path="/signup" element={<Signup />} />
+//       <Route path="/login" element={<Login />} />
+//       <Route path="/login/forgetpassword" element={<ForgetPassword />} />
+//       <Route path="/reset-password/:id" element={<ResetPassword />} />
+//       <Route path="/newinput" element={<NewInput />} />
+//       <Route path="/signup" element={<Signup />} />
 
-      <Route path="/dashboard" element={<Dashboard />}>
-        <Route path="main" element={<DashboardBody />} />
-        <Route path="addmember" element={<AddMember />} />
-        <Route path="addmember/new" element={<AddMemberForm />} />
-        <Route path="update/:id" element={<UpdateMember />} />
-        <Route path="eventlist" element={<EventList />} />
-        <Route path="settings" element={<Settings />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-      <Route path="*" element={<NotFound />} />
-    </Route>
-  )
-);
+//       <Route path="/dashboard" element={<Dashboard />}>
+//         <Route path="main" element={<DashboardBody />} />
+//         <Route path="addmember" element={<AddMember />} />
+//         <Route path="addmember/new" element={<AddMemberForm />} />
+//         <Route path="update/:id" element={<UpdateMember />} />
+//         <Route path="eventlist" element={<EventList />} />
+//         <Route path="settings" element={<Settings />} />
+//         <Route path="*" element={<NotFound />} />
+//       </Route>
+//       <Route path="*" element={<NotFound />} />
+//     </Route>
+//   )
+// );
 
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <RouterProvider router={router} />
-          </PersistGate>
-        </Provider>
-      </QueryClientProvider>
+      <AuthContextProvider>
+        <QueryClientProvider client={queryClient}>
+          {/* <RouterProvider router={router} /> */}
+          <App />
+        </QueryClientProvider>
+      </AuthContextProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

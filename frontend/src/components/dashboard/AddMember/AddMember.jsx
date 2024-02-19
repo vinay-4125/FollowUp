@@ -1,22 +1,14 @@
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { Edit, MoreHorizontal, Plus, Trash, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import BreadCrumb from "../Breadcrumb";
 import MemberTable from "./MemberTable";
 import MemberAction from "./MemberAction";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 const breadcrumbItems = [{ title: "Member", link: "/dashboard/Member" }];
 

@@ -18,7 +18,7 @@ const reminderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  message: {
+  description: {
     type: String,
     required: true,
   },
@@ -39,4 +39,3 @@ const reminderSchema = new mongoose.Schema({
 const Reminder = mongoose.model("reminder", reminderSchema);
 
 module.exports = Reminder;
-

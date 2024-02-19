@@ -3,9 +3,14 @@ import { Button } from "../ui/button";
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import ThemeToggle from "../ThemeToggle";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import Logout from "../auth/Logout";
 
 const NewNav = () => {
   const [state, setState] = useState(false);
+
+  const { user } = useAuthContext();
+
   const menus = [
     { title: "Signup", path: "/signup" },
     { title: "Login", path: "/login" },
@@ -67,14 +72,23 @@ const NewNav = () => {
             state ? "block" : "hidden"
           }`}
         >
-          <ul className="justify-end items-center space-y-8 md:flex md:space-x-6 md:space-y-0">
-            {menus.map((item, idx) => (
-              <li key={idx}>
-                <Link to={`${item.path}`}>
-                  <Button className="min-w-30">{item.title}</Button>
-                </Link>
-              </li>
-            ))}
+          <ul
+            className={`justify-end items-center space-y-5 md:flex md:space-x-6 md:space-y-0 `}
+          >
+            {!user ? (
+              menus.map((item, idx) => (
+                <li key={idx}>
+                  <Link to={`${item.path}`}>
+                    <Button className="min-w-30">{item.title}</Button>
+                  </Link>
+                </li>
+              ))
+            ) : (
+              <>
+                <h2 className="border-none pt-2">{user.username}</h2>
+                <Logout />
+              </>
+            )}
             <li>
               <ThemeToggle />
             </li>

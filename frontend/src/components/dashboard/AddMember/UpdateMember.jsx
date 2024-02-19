@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -23,12 +23,12 @@ const breadcrumbItems = [
   { title: "Update", link: "/dashboard/addmember/update" },
 ];
 
-const formSchema = z.object({
-  firstname: z.string().min(1),
-  lastname: z.string().min(1),
-  email: z.string().email(),
-  slackId: z.string().min(1),
-  phonenumber: z.string().min(10).max(10),
+const formSchema = yup.object({
+  firstname: yup.string().min(1),
+  lastname: yup.string().min(1),
+  email: yup.string().email(),
+  slackId: yup.string().min(1),
+  phonenumber: yup.string().min(10).max(10),
 });
 
 const UpdateMember = () => {
@@ -44,13 +44,13 @@ const UpdateMember = () => {
       slackId: state.slackId,
     },
     model: "all",
-    resolver: zodResolver(formSchema),
+    resolver: yupResolver(formSchema),
   });
 
   const onSubmit = async (data) => {
     const finalData = { ...data, _id: state._id };
     try {
-      const res = await axios.put("/api/updatemember", finalData);
+      await axios.put("/api/updatemember", finalData);
       toast.success("Member updated");
       navigate("/dashboard/addmember");
     } catch (error) {

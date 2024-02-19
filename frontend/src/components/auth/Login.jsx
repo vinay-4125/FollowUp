@@ -1,14 +1,14 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addItem } from "../../redux/slice/userSlice";
 import { Button } from "../ui/button";
 import { Toaster, toast } from "sonner";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  const { dispatch } = useAuthContext();
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   //   const [errorMessage, setErrorMessage] = useState();
@@ -22,9 +22,12 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post("/api/auth/login", formData);
-      const data = res.data;
-      console.log("data", data.user);
-      dispatch(addItem(data.user));
+      const data = await res.data;
+
+      localStorage.setItem("user", JSON.stringify(data.user));
+      await dispatch({ type: "LOGIN", payload: data.user });
+      console.log("data", data);
+
       navigate("/");
     } catch (error) {
       const { all, email, password } = error.response.data.error;
@@ -43,7 +46,7 @@ const Login = () => {
   return (
     <>
       <div>
-        <section className="flex flex-col md:flex-row h-screen items-center">
+        <section className="flex flex-col md:flex-row h-screen items-center text-black dark:bg-white">
           <div className="bg-indigo-600 hidden lg:block w-full md:w-1/2 xl:w-2/3 h-screen">
             {/* <Image src="https://source.unsplash.com/random" alt="" className="w-full h-full object-cover" width="100" height="100"/> */}
           </div>
@@ -118,8 +121,7 @@ const Login = () => {
                   //       className="w-full block bg-indigo-500 hover:bg-indigo-400 focus:bg-indigo-400 text-white font-semibold rounded-lg
                   // px-4 py-3 mt-6"
                   // className="w-full block px-4 mt-6"
-                  className="w-full p-6 mt-6"
-
+                  className="w-full p-6 mt-6 dark:bg-black dark:text-white"
                 >
                   Log In
                 </Button>
@@ -179,7 +181,7 @@ const Login = () => {
             </div>
           </div>
         </section>
-        <Toaster richColors position="bottom-left"/>
+        <Toaster richColors position="bottom-left" />
       </div>
     </>
   );

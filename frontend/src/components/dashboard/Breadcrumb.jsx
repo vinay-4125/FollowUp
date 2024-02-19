@@ -8,7 +8,7 @@ export default function BreadCrumb({ items }) {
   return (
     <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground">
       <Link
-        to={"/dashboard"}
+        to={"/dashboard/main"}
         className="overflow-hidden text-ellipsis whitespace-nowrap"
       >
         Dashboard

@@ -7,7 +7,7 @@ module.exports.reminder = async (req, res) => {
       notification,
       listMembers,
       repeat,
-      message,
+      description,
       time,
       date,
       eventName,
@@ -16,7 +16,7 @@ module.exports.reminder = async (req, res) => {
       notification,
       listMembers,
       repeat,
-      message,
+      description,
       time,
       date,
       eventName,
@@ -26,7 +26,7 @@ module.exports.reminder = async (req, res) => {
         notification &&
         listMembers &&
         repeat &&
-        message &&
+        description &&
         time &&
         date &&
         eventName
@@ -39,7 +39,7 @@ module.exports.reminder = async (req, res) => {
       notification,
       listMembers,
       repeat,
-      message,
+      description,
       time,
       date,
       eventName,

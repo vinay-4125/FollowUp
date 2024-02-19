@@ -8,8 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import AlertModal from "./AlertModal";
+import { Link } from "react-router-dom";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,18 +20,23 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import axios from "axios";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 
 const MemberAction = ({ data }) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
+  const queryClient = useQueryClient();
+
   const handleDeleteMember = async (data) => {
-    console.log(data._id);
     try {
       const res = await axios.delete("/api/deletemember", {
         params: { _id: data._id },
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["getMembers"],
+        refetchType: "active",
       });
     } catch (error) {
       console.log(error);
@@ -83,7 +87,7 @@ const MemberAction = ({ data }) => {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-destructive hover:bg-destructive/80"
+              className="bg-destructive text-white hover:bg-destructive/80"
               onClick={() => handleDeleteMember(data)}
             >
               Continue
