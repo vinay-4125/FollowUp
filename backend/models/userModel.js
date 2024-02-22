@@ -20,6 +20,12 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please enter a password"],
       minlength: [6, "Minimum length of character is 6 character"],
     },
+    reminders: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "reminder",
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { MobileSidebar } from "./MobileSidebar";
 import ThemeToggle from "../ThemeToggle";
 import EventFormOne from "./EventFormOne";
-import { useAuthContext } from "@/hooks/useAuthContext";
+import UserNav from "./UserNav";
+import EventFormTwo from "./EventFormTwo";
 
 const DashboardHeader = () => {
-  const { user } = useAuthContext();
   return (
     <div className="fixed top-0 left-0 right-0 supports-backdrop-blur:bg-background/60 border-b bg-background/95 backdrop-blur z-20">
       <nav className="h-14 flex items-center justify-between px-4">
@@ -33,11 +33,13 @@ const DashboardHeader = () => {
           <MobileSidebar />
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-5">
           {/* <UserNav /> */}
           {/* <EventForm /> */}
-          <EventFormOne />
-          {user && <h6>{user?.username}</h6>}
+          {/* <EventFormOne /> */}
+          <EventFormTwo />
+          {/* {user && <h6>{user?.username}</h6>} */}
+          <UserNav />
           <ThemeToggle />
         </div>
       </nav>

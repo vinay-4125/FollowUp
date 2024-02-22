@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { ChevronsUpDown, Plus, X } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   Form,
@@ -18,29 +18,31 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import makeAnimated from "react-select/animated";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { useEffect, useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-} from "../ui/command";
-import { CommandItem } from "cmdk";
-import { ScrollArea } from "../ui/scroll-area";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "../ui/select";
+import { Toaster, toast } from "sonner";
+import Select from "react-select";
 import {
-  Select,
+  Select as ShadSelect,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Toaster, toast } from "sonner";
 
 const formSchema = yup.object({
   eventName: yup.string().required(),
@@ -53,9 +55,14 @@ const formSchema = yup.object({
   listMembers: yup.array().required(),
   notification: yup.array().required(),
   repeat: yup.string().required(),
+  color: yup.string().required(),
 });
 
-const EventFormOne = () => {
+const EventFormTwo = () => {
+  const animatedComponents = makeAnimated();
+
+  const [selectColor, setSelectColor] = useState("");
+
   const fetchMembers = async () => {
     const res = await axios.get("/api/getMemberFullname");
     const { fullname } = res.data;
@@ -73,11 +80,26 @@ const EventFormOne = () => {
     // staleTime: 1000 * 10,
   });
 
-  // console.log("Membersname", membersName);
+  let colors = [
+    "#FF5733",
+    "#FFD700",
+    "#4CAF50",
+    "#3498DB",
+    "#9B59B6",
+    "#E74C3C",
+    "#578885",
+  ];
+
+  const repeatData = [
+    { label: "Does not repeat", value: "norepeat" },
+    { label: "Daily", value: "daily" },
+    { label: "Weekly", value: "weekly" },
+    { label: "Monthly", value: "monthly" },
+  ];
+
   const [members, setMembers] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
 
-  const [selectedUser, setSelectedUser] = useState([]);
   useEffect(() => setMembers(membersName), [membersName]);
   const form = useForm({
     defaultValues: {
@@ -88,53 +110,16 @@ const EventFormOne = () => {
       listMembers: [],
       notification: [],
       repeat: "",
+      color: "",
     },
     mode: "all",
     resolver: yupResolver(formSchema),
   });
 
-  const handleCombobox = (field, item) => {
-    const selectedMembers = field.value || [];
-    const updatedMembers = selectedMembers.includes(item.value)
-      ? selectedMembers.filter((member) => member !== item.value)
-      : [...selectedMembers, item.value];
-
-    form.setValue("listMembers", updatedMembers);
-  };
-
-  const handleSelectFramework = (selectedValue) => {
-    const selectedFramework = members.find(
-      (framework) => framework.value !== selectedValue
-    );
-    console.log("selectedFramework", selectedFramework);
-    setSelectedUser((prevMembers) => [...prevMembers, selectedFramework]);
-    setMembers((prevMembers) =>
-      prevMembers.filter((member) => member.value !== selectedFramework?.value)
-    );
-  };
-
-  const handleRemoveMember = (memberValue) => {
-    const removedMember = selectedUser?.find(
-      (member) => member.value === memberValue
-    );
-    if (removedMember) {
-      setSelectedUser((prevMembers) =>
-        prevMembers.filter((member) => member?.value !== memberValue)
-      );
-      form.setValue(
-        "listMembers",
-        selectedUser
-          .filter((member) => member?.value !== memberValue)
-          .map((member) => member.value)
-      );
-      setMembers((prevFrameworks) => [...prevFrameworks, removedMember]);
-      // setMembers((prev) => [
-      //   ...prev,
-      //   selectedUser
-      //     .filter((member) => member.value !== memberValue)
-      //     .map((member) => member.value),
-      // ]);
-    }
+  const handleMemberListChange = (data) => {
+    const valueData = data.map((item) => item.value);
+    setSelectedOption(valueData);
+    form.setValue("listMembers", valueData);
   };
 
   const onSubmit = async (data) => {
@@ -164,22 +149,62 @@ const EventFormOne = () => {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="mt-2 mb-4">
-                <FormField
-                  control={form.control}
-                  name="eventName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex justify-start items-center">
-                        Event Name
-                      </FormLabel>
-                      <FormControl>
-                        <Input placeholder="Event name" {...field} />
-                      </FormControl>
-                      <FormMessage className="flex justify-start items-center" />
-                    </FormItem>
-                  )}
-                />
+              <div className="mt-2 mb-4 grid grid-cols-3 gap-4">
+                <div className="col-span-2">
+                  <FormField
+                    control={form.control}
+                    name="eventName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex justify-start items-center">
+                          Event Name
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="Event name" {...field} />
+                        </FormControl>
+                        <FormMessage className="flex justify-start items-center" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="col-span-1">
+                  <FormField
+                    control={form.control}
+                    name="color"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex justify-start items-center">
+                          Color
+                        </FormLabel>
+                        <FormControl>
+                          <ShadSelect
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            required={true}
+                          >
+                            <SelectTrigger className={`bg-[${field.value}]`}>
+                              <SelectValue placeholder="Select a Color" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectLabel>Event Colors</SelectLabel>
+                                {colors.map((item) => (
+                                  <SelectItem
+                                    key={item}
+                                    className={`bg-[${item}] rounded-full`}
+                                    value={item}
+                                  >
+                                    {item}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </ShadSelect>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
 
               <div className="grid w-full gap-1 5">
@@ -211,7 +236,11 @@ const EventFormOne = () => {
                           Date
                         </FormLabel>
                         <FormControl>
-                          <Input type="date" {...field} />
+                          <Input
+                            type="date"
+                            {...field}
+                            min={new Date().toISOString().split("T")[0]}
+                          />
                         </FormControl>
                         <FormMessage className="flex justify-start items-center" />
                       </FormItem>
@@ -238,7 +267,7 @@ const EventFormOne = () => {
               </div>
 
               <div className="my-4">
-                <div className="grid grid-cols-2">
+                <div className="grid">
                   <div>
                     <FormField
                       control={form.control}
@@ -248,82 +277,33 @@ const EventFormOne = () => {
                           <FormLabel className="flex justify-start items-center">
                             Add Members
                           </FormLabel>
-
-                          <Popover modal={true}>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant="outline"
-                                  role="combobox"
-                                  aria-expanded={open}
-                                  className="w-[200px] justify-between"
-                                >
-                                  {!field.value
-                                    ? members?.find(
-                                        (item) => item.value === field.value
-                                      )?.label
-                                    : "Select Member"}
-                                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-[200px] p-0">
-                              <Command>
-                                <CommandInput
-                                  placeholder="Search Members..."
-                                  className="h-9"
-                                />
-                                <CommandEmpty>No member found.</CommandEmpty>
-                                <CommandGroup>
-                                  <ScrollArea className="h-48 w-full rounded-md border">
-                                    {members?.map((item) => (
-                                      <CommandItem
-                                        value={item.label}
-                                        key={item.value}
-                                        className="px-2 py-1 hover:bg-slate-300 dark:hover:bg-slate-700"
-                                        onSelect={(currentValue) => {
-                                          handleCombobox(field, item);
-                                          handleSelectFramework(currentValue);
-                                        }}
-                                      >
-                                        {item.label}
-                                      </CommandItem>
-                                    ))}
-                                  </ScrollArea>
-                                </CommandGroup>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
-
+                          <FormControl>
+                            <Select
+                              defaultValue={selectedOption}
+                              onChange={(data) => handleMemberListChange(data)}
+                              options={members}
+                              isMulti={true}
+                              // styles={{
+                              //   control: (base) => ({
+                              //     ...base,
+                              //     border: "none",
+                              //     boxShadow: "none",
+                              //     "&:hover": {
+                              //       border: "1px solid black",
+                              //   },
+                              //   }),
+                              // }}
+                              className="react-select-class"
+                              components={animatedComponents}
+                              noOptionsMessage={() => "No more members"}
+                              placeholder="Select Members..."
+                              closeMenuOnSelect={false}
+                            />
+                          </FormControl>
                           <FormMessage className="flex justify-start items-center" />
                         </FormItem>
                       )}
                     />
-                  </div>
-                  <div className="flex -mt-1 -space-x-1 pl-1 justify-start items-center overflow-hidden">
-                    {selectedUser.slice(0, 5).map((item, i) => (
-                      <div
-                        className="h-10 w-10 text-white bg-black rounded-full relative inline-block ring-2 ring-white"
-                        key={i}
-                      >
-                        <button
-                          onClick={() => handleRemoveMember(item.value)}
-                          className="absolute bg-gray-400 rounded-full right-0 cursor-pointer"
-                        >
-                          <X size={15} color="black" />
-                        </button>
-                        <p className="flex text-white justify-center items-center h-10">
-                          {item?.label.charAt(0).toUpperCase()}
-                        </p>
-                      </div>
-                    ))}
-                    {selectedUser.length > 5 && (
-                      <div className="h-10 w-10 text-white bg-black/30 rounded-full">
-                        <p className="flex justify-center items-center">
-                          +{selectedUser.length - 5}
-                        </p>
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
@@ -380,24 +360,19 @@ const EventFormOne = () => {
                           Repeat
                         </FormLabel>
                         <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select a repetition" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="norepeat">
-                                Does not repeat
-                              </SelectItem>
-                              <SelectItem value="daily">Daily</SelectItem>
-                              <SelectItem value="weekly">Weekly</SelectItem>
-                              <SelectItem value="monthly">Monthly</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <FormControl>
+                            <Select
+                              defaultValue={selectedOption}
+                              options={repeatData}
+                              components={animatedComponents}
+                              placeholder="Select Repetition"
+                              closeMenuOnSelect={false}
+                              onChange={(data) => {
+                                form.setValue("repeat", data.value);
+                              }}
+                              className="focus:border-none focus:outline-none border-input"
+                            />
+                          </FormControl>
                         </FormControl>
                         <FormMessage className="flex justify-start items-center" />
                       </FormItem>
@@ -427,4 +402,4 @@ const EventFormOne = () => {
   );
 };
 
-export default EventFormOne;
+export default EventFormTwo;

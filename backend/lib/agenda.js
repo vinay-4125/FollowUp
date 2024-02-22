@@ -1,5 +1,5 @@
 const Agenda = require("agenda");
-const Reminder = require("../models/reminderModel");
+const { Reminder } = require("../models/reminderModel");
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
@@ -42,7 +42,7 @@ agenda.define("sendReminder", async (job) => {
     }
   };
 
-  sendMail(transporter, mailOptions);
+  // sendMail(transporter, mailOptions);
   console.log(
     `Sending reminder to ${reminder._userId} for ${reminder.eventName}\n Email sent`
   );

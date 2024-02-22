@@ -5,6 +5,7 @@ import { useState } from "react";
 import ThemeToggle from "../ThemeToggle";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import Logout from "../auth/Logout";
+import UserNav from "../dashboard/UserNav";
 
 const NewNav = () => {
   const [state, setState] = useState(false);
@@ -85,8 +86,10 @@ const NewNav = () => {
               ))
             ) : (
               <>
-                <h2 className="border-none pt-2">{user.username}</h2>
-                <Logout />
+                <h2 className="border-none">
+                  <UserNav />
+                </h2>
+                {/* <Logout /> */}
               </>
             )}
             <li>

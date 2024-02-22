@@ -1,24 +1,24 @@
 const menuItems = [
   {
     title: "Dashboard",
-    href: "/dashboard/main",
-    icon: "layout-dashboard",
+    href: "/dashboard/",
+    icon: "dashboard",
   },
   {
     title: "Member",
     href: "/dashboard/addmember",
-    icon: "user-plus",
+    icon: "employee",
   },
   {
     title: "EventList",
     href: "/dashboard/eventlist",
-    icon: "table-properties",
+    icon: "table",
   },
-  {
-    title: "Profile",
-    href: "/dashboard/profile",
-    icon: "user",
-  },
+  // {
+  //   title: "Profile",
+  //   href: "/dashboard/profile",
+  //   icon: "user",
+  // },
   {
     title: "Kanban",
     href: "/dashboard/kanban",
@@ -27,7 +27,7 @@ const menuItems = [
   {
     title: "Settings",
     href: "/dashboard/settings",
-    icon: "",
+    icon: "settings",
   },
 ];
 

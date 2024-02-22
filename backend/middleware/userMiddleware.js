@@ -9,10 +9,10 @@ module.exports.userVerification = (req, res, next) => {
   try {
     jwt.verify(token, process.env.SECRET, (err, decodedToken) => {
       if (err) {
-        console.log(err);
+      console.log(err);
         res.redirect("/login");
       } else {
-        console.log(decodedToken);
+        // console.log(decodedToken);
         next();
       }
     });

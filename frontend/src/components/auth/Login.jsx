@@ -26,9 +26,9 @@ const Login = () => {
 
       localStorage.setItem("user", JSON.stringify(data.user));
       await dispatch({ type: "LOGIN", payload: data.user });
-      console.log("data", data);
+      // console.log("data", data);
 
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       const { all, email, password } = error.response.data.error;
       if (all) {

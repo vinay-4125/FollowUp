@@ -6,6 +6,7 @@ const userAuthRoutes = require("./routes/userRoutes");
 const { userVerification } = require("./middleware/userMiddleware");
 const reminderRoutes = require("./routes/reminderRoutes");
 const memberRoutes = require("./routes/memberRoutes");
+const agendaRoutes = require("./routes/agendaRoutes");
 const PORT = process.env.PORT;
 const dbURL = process.env.MONGODBURL;
 
@@ -17,6 +18,7 @@ app.use(cookiePraser());
 app.use("/api/auth", userAuthRoutes);
 app.use("/api", reminderRoutes);
 app.use("/api", memberRoutes);
+app.use("/api", agendaRoutes);
 
 app.get("/", (req, res) => res.send("HOMEPAGE"));
 app.get("/dashboard", userVerification, (req, res) => {

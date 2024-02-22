@@ -5,7 +5,6 @@ import "./index.css";
 import { ThemeProvider } from "./components/ThemeProvider.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthContextProvider } from "./context/AuthContext";
-import { BrowserRouter } from "react-router-dom";
 
 // const router = createBrowserRouter([
 //   {

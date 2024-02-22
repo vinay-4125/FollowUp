@@ -39,7 +39,7 @@ const Signup = () => {
   };
 
   return (
-    <section className="flex flex-col md:flex-row h-screen items-center">
+    <section className="flex flex-col md:flex-row h-screen items-center text-black">
       <div className="bg-indigo-600 hidden lg:block w-full md:w-1/2 xl:w-2/3 h-screen">
         {/* <Image
         src="https://source.unsplash.com/random"
@@ -125,7 +125,7 @@ const Signup = () => {
             </div>
             <Button
               type="submit"
-              className="w-full p-6 mt-10"
+              className="w-full p-6 mt-10 dark:black"
 
               // className="w-full block bg-indigo-500 hover:bg-indigo-400 focus:bg-indigo-400 text-white font-semibold rounded-lg
               // px-4 py-3 mt-6"
