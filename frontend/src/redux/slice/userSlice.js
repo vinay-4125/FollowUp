@@ -1,24 +1,38 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// const userToken =
-
 const initialState = {
-  userInfo: {},
-  userToken: "",
+  user: null,
+  accessToken: "",
 };
 
 export const userSlice = createSlice({
   name: "userInfo",
   initialState,
   reducers: {
-    addItem: (state, action) => {
-      state.userInfo = action.payload;
+    setUserLocalStorage: (state, action) => {
+      const { user, token } = action.payload;
+      localStorage.setItem("user", JSON.stringify({ user }));
+      localStorage.setItem("token", JSON.stringify({ token }));
+      state.user = user;
+      state.accessToken = token;
     },
-    deleteItem: (state) => {
-      state.userInfo = {};
+    deleteUserLocalStorage: (state) => {
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      state.user = null;
+      state.accessToken = "";
+    },
+    updateUserLocalStorage: (state, action) => {
+      const user = action.payload;
+      localStorage.setItem("user", JSON.stringify({ user }));
+      state.user = user;
     },
   },
 });
 
-export const { addItem, deleteItem } = userSlice.actions;
+export const {
+  setUserLocalStorage,
+  deleteUserLocalStorage,
+  updateUserLocalStorage,
+} = userSlice.actions;
 export default userSlice.reducer;

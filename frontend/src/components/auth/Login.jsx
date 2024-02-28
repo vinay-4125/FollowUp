@@ -3,13 +3,12 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Toaster, toast } from "sonner";
-import { useAuthContext } from "@/hooks/useAuthContext";
+import { useDispatch } from "react-redux";
+import { setUserLocalStorage } from "@/redux/slice/userSlice";
 
 const Login = () => {
   const navigate = useNavigate();
-
-  const { dispatch } = useAuthContext();
-
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({ email: "", password: "" });
   //   const [errorMessage, setErrorMessage] = useState();
 
@@ -23,9 +22,7 @@ const Login = () => {
     try {
       const res = await axios.post("/api/auth/login", formData);
       const data = await res.data;
-
-      localStorage.setItem("user", JSON.stringify(data.user));
-      await dispatch({ type: "LOGIN", payload: data.user });
+      dispatch(setUserLocalStorage(data));
       // console.log("data", data);
 
       navigate("/dashboard");

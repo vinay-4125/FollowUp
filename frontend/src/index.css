@@ -131,6 +131,10 @@ h2 {
   @apply dark:border-[hsl(var(--calborder))] !important;
 }
 
+/* .rbc-month-view {
+  @apply overflow-y-auto;
+} */
+
 .rbc-btn-group button {
   @apply dark:text-white;
 }
@@ -144,7 +148,11 @@ h2 {
 }
 
 .rbc-today {
-  @apply dark:text-black;
+  @apply dark:text-black !important;
+}
+
+.rbc-current {
+  @apply dark:text-black !important;
 }
 
 .css-13cymwt-control {

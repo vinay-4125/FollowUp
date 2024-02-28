@@ -3,7 +3,7 @@ const agendaController = require("../controllers/agendaController");
 
 const routes = express.Router();
 
-routes.get("/allevents", agendaController.allEvents);
-routes.get("/allEventsById/:id",agendaController.allEventsById)
+routes.get("/allreminders", agendaController.allReminders);
+routes.get("/allRemindersById/:id", agendaController.allRemindersById);
 
 module.exports = routes;

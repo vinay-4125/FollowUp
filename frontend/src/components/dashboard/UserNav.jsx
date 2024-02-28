@@ -1,3 +1,4 @@
+import { deleteUserLocalStorage } from "@/redux/slice/userSlice";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
@@ -9,16 +10,24 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Button } from "../ui/button";
-import { useAuthContext } from "@/hooks/useAuthContext";
-import { useLogout } from "@/hooks/useLogout";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 const UserNav = () => {
-  const { user } = useAuthContext();
-  const { logout } = useLogout();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
-
+  const handleLogout = async () => {
+    try {
+      const res = await axios.get("/api/auth/logout");
+      const data = res.data;
+      dispatch(deleteUserLocalStorage());
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -54,7 +63,7 @@ const UserNav = () => {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => logout()}>
+        <DropdownMenuItem onClick={() => handleLogout()}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>

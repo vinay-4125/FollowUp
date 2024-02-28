@@ -9,19 +9,21 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.scss";
+import { useSelector } from "react-redux";
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
-const EventListDrag = () => {
+const ReminderListDrag = () => {
   const localizer = momentLocalizer(moment);
+  const { user } = useSelector((state) => state.user);
 
   const fetchMembers = async () => {
-    const res = await axios.get("/api/allEventsById/65d5f0ab66b7081caf60b2aa");
+    const res = await axios.get(`/api/allRemindersById/${user._id}`);
     const events = res.data.allData.map((event) => ({
       title: event.data.reminder.eventName,
       start: new Date(
         `${event.data.reminder.date} ${event.data.reminder.time}`
       ),
-      end: new Date(`${event.data.reminder.date} ${event.data.reminder.time}`), // You may need to adjust this depending on your data model
+      end: new Date(`${event.data.reminder.date} ${event.data.reminder.time}`),
     }));
     return events;
   };
@@ -46,7 +48,6 @@ const EventListDrag = () => {
           ...filtered,
           { ...existing, start, end, allDay },
         ];
-        console.log("Updated events:", updatedEvents);
         return updatedEvents;
       });
     },
@@ -70,7 +71,6 @@ const EventListDrag = () => {
     }
   }, [events]);
 
-  console.log("date", events);
 
   return (
     <div className="h-screen mt-5 pb-16">
@@ -100,4 +100,4 @@ const EventListDrag = () => {
   );
 };
 
-export default EventListDrag;
+export default ReminderListDrag;

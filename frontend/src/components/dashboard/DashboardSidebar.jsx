@@ -6,7 +6,7 @@ import { useMemo } from "react";
 const DashboardSidebar = () => {
   const items = useMemo(() => menuItems, []);
   return (
-    <div>
+    <div className="">
       <nav
         className={cn(`relative hidden h-screen border-r pt-16 lg:block w-72`)}
       >

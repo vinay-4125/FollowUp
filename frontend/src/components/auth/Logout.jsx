@@ -1,20 +1,18 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
-import { useAuthContext } from "@/hooks/useAuthContext";
+import { useDispatch } from "react-redux";
+import { deleteUserLocalStorage } from "@/redux/slice/userSlice";
 
 const Logout = () => {
   const navigate = useNavigate();
-  const { dispatch } = useAuthContext()
+  const dispatch = useDispatch();
   const handleLogout = async () => {
     try {
       const res = await axios.get("/api/auth/logout");
       const data = res.data;
-      localStorage.removeItem("user");
-
-      dispatch({ type: "LOGOUT" });
+      dispatch(deleteUserLocalStorage());
       navigate("/");
-      console.log(data);
     } catch (error) {
       console.log(error);
     }

@@ -15,13 +15,13 @@ mongoose.connect(dbURL).then(() => console.log("Mongodb connected"));
 const app = express();
 app.use(express.json());
 app.use(cookiePraser());
-app.use("/api/auth", userAuthRoutes);
+app.use("/api", userAuthRoutes);
 app.use("/api", reminderRoutes);
 app.use("/api", memberRoutes);
 app.use("/api", agendaRoutes);
 
 app.get("/", (req, res) => res.send("HOMEPAGE"));
-app.get("/dashboard", userVerification, (req, res) => {
+app.get("/dashboard", (req, res) => {
   res.send("DashboardPage");
 });
 

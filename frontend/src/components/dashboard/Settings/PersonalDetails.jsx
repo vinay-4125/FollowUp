@@ -14,36 +14,43 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { updateUserLocalStorage } from "@/redux/slice/userSlice";
 
 const formSchema = yup.object({
-  firstname: yup.string().min(1),
-  lastname: yup.string().min(1),
+  username: yup.string().min(1),
   email: yup.string().email(),
   slackId: yup.string().min(1),
   phonenumber: yup.string().min(10).max(10),
 });
 
-const PersonalDetails = () => {
+const PersonalDetails = ({ user }) => {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  // const state1 = {
+  //   username: "abc",
+  //   email: "abc@gmail.com",
+  //   phonenumber: "1231231231",
+  //   slackId: "abc@slack.com",
+  // };
   const form = useForm({
     defaultValues: {
-      //   firstname: state.firstname,
-      //   lastname: state.lastname,
-      //   email: state.email,
-      //   phonenumber: state.phonenumber,
-      //   slackId: state.slackId,
+      username: user?.username,
+      email: user?.email,
+      phonenumber: user?.phonenumber,
+      slackId: user?.slackId,
     },
-    model: "all",
+    mode: "all",
     resolver: yupResolver(formSchema),
   });
 
   const onSubmit = async (data) => {
-    const finalData = { ...data };
+    const finalData = { ...data, _id: user._id };
     try {
-      await axios.put("/api/updatemember", finalData);
-      toast.success("Member updated");
-      navigate("/dashboard/addmember");
+      await axios.put("/api/updateUser", finalData);
+      dispatch(updateUserLocalStorage(finalData));
+      toast.success("Profile Updated");
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -52,7 +59,6 @@ const PersonalDetails = () => {
 
   return (
     <>
-      {" "}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -61,29 +67,14 @@ const PersonalDetails = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="firstname"
+              name="username"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex justify-start items-center">
-                    Firstname
+                    Username
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Luke" {...field} />
-                  </FormControl>
-                  <FormMessage className="flex justify-start items-center " />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="lastname"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex justify-start items-center">
-                    Lastname
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="Wallace" {...field} />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage className="flex justify-start items-center " />
                 </FormItem>
@@ -101,7 +92,7 @@ const PersonalDetails = () => {
                     Email
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="abc@gmail.com" {...field} />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage className="flex justify-start items-center " />
                 </FormItem>
@@ -116,7 +107,7 @@ const PersonalDetails = () => {
                     Phone (Whatsapp)
                   </FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="+9191919191" {...field} />
+                    <Input placeholder="9191919191" type="number" {...field} />
                   </FormControl>
                   <FormMessage className="flex justify-start items-center " />
                 </FormItem>

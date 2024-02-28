@@ -44,7 +44,7 @@ agenda.define("sendReminder", async (job) => {
 
   // sendMail(transporter, mailOptions);
   console.log(
-    `Sending reminder to ${reminder._userId} for ${reminder.eventName}\n Email sent`
+    `Sending reminder to ${reminder._userId} for ${reminder.reminderName}\n Email sent`
   );
 });
 

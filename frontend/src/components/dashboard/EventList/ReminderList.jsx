@@ -1,12 +1,11 @@
 import BreadCrumb from "../Breadcrumb";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import EventListDrag from "./EventListDrag";
-import EventListCal from "./EventListCal";
+import ReminderListCal from "./ReminderListCal";
 
 const breadcrumbItems = [{ title: "EventList", link: "/dashboard/EventList" }];
 
-const EventList = () => {
+const ReminderList = () => {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <BreadCrumb items={breadcrumbItems} />
@@ -14,10 +13,9 @@ const EventList = () => {
         <Heading title={`EventList`} />
       </div>
       <Separator />
-      <EventListCal />
-      {/* <EventListDrag /> */}
+      <ReminderListCal />
     </div>
   );
 };
 
-export default EventList;
+export default ReminderList;

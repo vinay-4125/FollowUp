@@ -168,7 +168,6 @@ const EventForm = () => {
         notification: [],
         repeat: "",
       });
-      console.log(members);
       setOpenModal(false);
       // toast.success(res.data.message, {
       //   duration: 3000,
@@ -189,7 +188,7 @@ const EventForm = () => {
       //     label: "Undo",
       //     onClick: () => console.log("Undo"), //! To implement undo function to undo the event.
       //   },
-      // });
+      // });u
     } catch (error) {
       console.log(error);
     }

@@ -12,8 +12,9 @@ module.exports.reminder = async (req, res) => {
       description,
       time,
       date,
-      eventName,
+      reminderName,
       color,
+      userId,
     } = req.body;
     console.log({
       notification,
@@ -22,8 +23,9 @@ module.exports.reminder = async (req, res) => {
       description,
       time,
       date,
-      eventName,
-      color
+      reminderName,
+      color,
+      userId,
     });
     if (
       !(
@@ -33,42 +35,42 @@ module.exports.reminder = async (req, res) => {
         description &&
         time &&
         date &&
-        eventName &&
-        color
+        reminderName &&
+        color &&
+        userId
       )
     ) {
       return res.status(400).json({ error: "Missing required fields" });
     }
     const reminder = await Reminder.create({
-      _userId: "65d5f0ab66b7081caf60b2aa",
+      _userId: userId,
       notification,
       listMembers,
       repeat,
       description,
       time,
       date,
-      eventName,
-      color
+      reminderName,
+      color,
     });
     const updateUserDocument = await User.findByIdAndUpdate(
       {
-        _id: "65bd0af0f3768faaa8f01e48",
+        _id: userId,
       },
       { $push: { reminders: reminder } }
     );
 
-
     const checkInArrayReminder = await ArrayReminder.findOne({
-      userId: "65bd0af0f3768faaa8f01e48",
+      userId,
     });
     if (checkInArrayReminder) {
       const addToArrayReminder = await ArrayReminder.findOneAndUpdate(
-        { userId: "65bd0af0f3768faaa8f01e48" },
+        { userId },
         { $push: { reminders: reminder } }
       );
     } else {
       const newAddToArrayReminder = await ArrayReminder.create({
-        userId: "65bd0af0f3768faaa8f01e48",
+        userId,
         reminders: reminder,
       });
     }
@@ -81,7 +83,7 @@ module.exports.reminder = async (req, res) => {
     });
     console.log("Agenda scheudled for:" + reminder._userId);
     res.status(200).json({
-      message: `Reminder Set for ${eventName} at ${date}/${time} `,
+      message: `Reminder Set for ${reminderName} at ${date}/${time} `,
     });
   } catch (err) {
     console.log(err);

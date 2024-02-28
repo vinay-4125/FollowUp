@@ -19,7 +19,7 @@ const AddMember = () => {
     return res.data.member;
   };
 
-  const { data, isLoading, isError } = useQuery({
+  const { data } = useQuery({
     queryKey: ["getMembers"],
     queryFn: fetchMembers,
   });
@@ -47,6 +47,7 @@ const AddMember = () => {
     },
     {
       id: "actions",
+      header: "Actions",
       cell: ({ row }) => <MemberAction data={row.original} />,
     },
   ];

@@ -106,7 +106,6 @@ const EventFormOne = () => {
     const selectedFramework = members.find(
       (framework) => framework.value !== selectedValue
     );
-    console.log("selectedFramework", selectedFramework);
     setSelectedUser((prevMembers) => [...prevMembers, selectedFramework]);
     setMembers((prevMembers) =>
       prevMembers.filter((member) => member.value !== selectedFramework?.value)
@@ -139,7 +138,6 @@ const EventFormOne = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log(data);
       await axios.post("/api/reminder", data);
       toast.success("Member added");
     } catch (error) {

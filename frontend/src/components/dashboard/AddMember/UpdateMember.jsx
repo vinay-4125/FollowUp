@@ -43,7 +43,7 @@ const UpdateMember = () => {
       phonenumber: state.phonenumber,
       slackId: state.slackId,
     },
-    model: "all",
+    mode: "all",
     resolver: yupResolver(formSchema),
   });
 

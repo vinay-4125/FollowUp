@@ -39,7 +39,7 @@ const AddMemberForm = () => {
       phonenumber: "",
       slackId: "",
     },
-    model: "all",
+    mode: "all",
     resolver: yupResolver(formSchema),
   });
 

@@ -10,8 +10,8 @@ const menuItems = [
     icon: "employee",
   },
   {
-    title: "EventList",
-    href: "/dashboard/eventlist",
+    title: "ReminderList",
+    href: "/dashboard/reminderlist",
     icon: "table",
   },
   // {

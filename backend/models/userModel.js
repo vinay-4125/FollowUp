@@ -20,6 +20,14 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please enter a password"],
       minlength: [6, "Minimum length of character is 6 character"],
     },
+    slackId: {
+      type: String,
+      unique: true,
+    },
+    phonenumber: {
+      type: String,
+      unique: true,
+    },
     reminders: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -41,7 +49,8 @@ userSchema.statics.login = async function (email, password) {
   if (user) {
     const auth = await bcrypt.compare(password, user.password);
     if (auth) {
-      return user;
+      const { username, email, _id, slackId, phonenumber } = user;
+      return { username, email, _id, slackId, phonenumber };
     } else {
       throw Error("Invalid credentials");
     }

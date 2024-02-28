@@ -8,7 +8,6 @@ const Navbar = () => {
   //   state.user.userInfo.user?.userInfo;
   // });
   // console.log("userinfo", user);
-  console.log("username", username);
   const username = true; //! changing this line
   return (
     <div>

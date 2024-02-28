@@ -3,9 +3,12 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Toaster, toast } from "sonner";
+import { setUserLocalStorage } from "@/redux/slice/userSlice";
+import { useDispatch } from "react-redux";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -22,6 +25,8 @@ const Signup = () => {
     try {
       const res = await axios.post("/api/auth/signup", formData);
       const data = res.data;
+      dispatch(setUserLocalStorage(data));
+
       // console.log(data.user);
       navigate("/");
     } catch (error) {
@@ -133,7 +138,10 @@ const Signup = () => {
               Sign Up
             </Button>
             <hr className="my-6 border-gray-300 w-full" />
-            <Button className="w-full block bg-white hover:bg-gray-100 focus:bg-gray-100 text-gray-900 font-semibold rounded-lg px-4 py-3 border border-gray-300">
+            <button
+              type="button"
+              className="w-full block bg-white hover:bg-gray-100 focus:bg-gray-100 text-gray-900 font-semibold rounded-lg px-4 py-3 border border-gray-300"
+            >
               <div className="flex items-center justify-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -168,7 +176,7 @@ const Signup = () => {
                 </svg>
                 <span className="ml-4">Log in with Google</span>
               </div>
-            </Button>
+            </button>
           </form>
           <p className="mt-8">
             Already have a account{" "}

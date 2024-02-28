@@ -7,7 +7,7 @@ const reminderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    eventName: {
+    reminderName: {
       type: String,
       required: true,
     },

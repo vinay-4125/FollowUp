@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { Plus } from "lucide-react";
+import { Plus, PlusIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   Form,
@@ -43,9 +43,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useSelector } from "react-redux";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = yup.object({
-  eventName: yup.string().required(),
+  reminderName: yup.string().required(),
   date: yup.string().required(),
   time: yup.string().required(),
   description: yup.string().required(),
@@ -61,7 +64,10 @@ const formSchema = yup.object({
 const EventFormTwo = () => {
   const animatedComponents = makeAnimated();
 
-  const [selectColor, setSelectColor] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.user);
 
   const fetchMembers = async () => {
     const res = await axios.get("/api/getMemberFullname");
@@ -75,7 +81,7 @@ const EventFormTwo = () => {
   };
 
   const { data: membersName } = useQuery({
-    queryKey: ["getMembersForEventForm"],
+    queryKey: ["getMembersForReminderForm"],
     queryFn: fetchMembers,
     // staleTime: 1000 * 10,
   });
@@ -97,13 +103,48 @@ const EventFormTwo = () => {
     { label: "Monthly", value: "monthly" },
   ];
 
+  const fields = ["email", "phonenumber", "slackId"];
+  const existingFields = Object.keys(user)
+    .filter((field) => fields.includes(field))
+    .map((field) => {
+      // Map field names to desired names
+      if (field === "email") {
+        return "Email";
+      } else if (field === "phonenumber") {
+        return "Whatsapp";
+      } else if (field === "slackId") {
+        return "Slack";
+      } else {
+        return field;
+      }
+    });
+  const missingFields = fields
+    .filter((field) => !Object.prototype.hasOwnProperty.call(user, field))
+    .map((field) => {
+      // Map field names to desired names
+      if (field === "email") {
+        return "Email";
+      } else if (field === "phonenumber") {
+        return "Whatsapp";
+      } else if (field === "slackId") {
+        return "Slack";
+      } else {
+        return field;
+      }
+    });
+
+  const handleMissingFields = () => {
+    navigate("/dashboard/settings");
+    setOpen(false);
+  };
+
   const [members, setMembers] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => setMembers(membersName), [membersName]);
   const form = useForm({
     defaultValues: {
-      eventName: "",
+      reminderName: "",
       date: "",
       time: "",
       description: "",
@@ -124,9 +165,16 @@ const EventFormTwo = () => {
 
   const onSubmit = async (data) => {
     try {
+      data.userId = user._id;
       console.log(data);
-      await axios.post("/api/reminder", data);
-      toast.success("Member added");
+      const res = await axios.post("/api/reminder", data);
+      toast("Event has been created", {
+        description: res.data.message,
+        action: {
+          label: "Undo",
+          onClick: () => console.log("Undo"), //! To implement undo function to undo the event.
+        },
+      });
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -135,16 +183,16 @@ const EventFormTwo = () => {
 
   return (
     <>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <Button>
             <Plus />
-            Create Event
+            Create Reminder
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-2xl">Create Event</DialogTitle>
+            <DialogTitle className="text-2xl">Create Reminder</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>
@@ -153,14 +201,14 @@ const EventFormTwo = () => {
                 <div className="col-span-2">
                   <FormField
                     control={form.control}
-                    name="eventName"
+                    name="reminderName"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex justify-start items-center">
-                          Event Name
+                          Reminder Name
                         </FormLabel>
                         <FormControl>
-                          <Input placeholder="Event name" {...field} />
+                          <Input placeholder="Reminder name" {...field} />
                         </FormControl>
                         <FormMessage className="flex justify-start items-center" />
                       </FormItem>
@@ -182,16 +230,21 @@ const EventFormTwo = () => {
                             value={field.value}
                             required={true}
                           >
-                            <SelectTrigger className={`bg-[${field.value}]`}>
+                            <SelectTrigger
+                              style={{ backgroundColor: field.value }}
+                              className={`bg-[${field.value}]`}
+                            >
                               <SelectValue placeholder="Select a Color" />
                             </SelectTrigger>
                             <SelectContent>
                               <SelectGroup>
-                                <SelectLabel>Event Colors</SelectLabel>
+                                <SelectLabel>Reminder Colors</SelectLabel>
                                 {colors.map((item) => (
                                   <SelectItem
                                     key={item}
-                                    className={`bg-[${item}] rounded-full`}
+                                    style={{ backgroundColor: item }}
+                                    className="rounded-md"
+                                    // className={`bg-[${item}] rounded-full`}
                                     value={item}
                                   >
                                     {item}
@@ -217,7 +270,10 @@ const EventFormTwo = () => {
                         Description
                       </FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Event Description" {...field} />
+                        <Textarea
+                          placeholder="Reminder Description"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="flex justify-start items-center" />
                     </FormItem>
@@ -325,24 +381,35 @@ const EventFormTwo = () => {
                             onValueChange={field.onChange}
                             defaultValue={field.value}
                           >
-                            <ToggleGroupItem
-                              value="email"
-                              aria-label="Toggle bold"
-                            >
-                              Email
-                            </ToggleGroupItem>
-                            <ToggleGroupItem
-                              value="whatsapp"
-                              aria-label="Toggle strikethrough"
-                            >
-                              Whatsapp
-                            </ToggleGroupItem>
-                            <ToggleGroupItem
-                              value="slack"
-                              aria-label="Toggle italic"
-                            >
-                              Slack
-                            </ToggleGroupItem>
+                            {existingFields &&
+                              existingFields.map((item, index) => (
+                                <ToggleGroupItem
+                                  key={index}
+                                  value={item}
+                                  aria-label="Toggle strikethrough"
+                                >
+                                  {item}
+                                </ToggleGroupItem>
+                              ))}
+                            {existingFields.length !== fields.length && (
+                              <Popover>
+                                <PopoverTrigger className="border w-10 h-10 rounded-md flex justify-center items-center">
+                                  <PlusIcon className="font-light text-slate-600 h-6 w-6" />
+                                </PopoverTrigger>
+                                <PopoverContent className="w-fit h-fit">
+                                  {missingFields &&
+                                    missingFields.map((item, index) => (
+                                      <Button
+                                        variant="outline"
+                                        onClick={handleMissingFields}
+                                        key={index}
+                                      >
+                                        Add {item}
+                                      </Button>
+                                    ))}
+                                </PopoverContent>
+                              </Popover>
+                            )}
                           </ToggleGroup>
                         </FormControl>
                         <FormMessage className="flex justify-start items-center" />
@@ -398,6 +465,7 @@ const EventFormTwo = () => {
           </Form>
         </DialogContent>
       </Dialog>
+      <Toaster />
     </>
   );
 };
