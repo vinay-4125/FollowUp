@@ -12,11 +12,10 @@ import { Input } from "@/components/ui/input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
-import { useDispatch, useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
 import { updateUserLocalStorage } from "@/redux/slice/userSlice";
+import ProfilePicture from "./ProfilePicture";
 
 const formSchema = yup.object({
   username: yup.string().min(1),
@@ -26,8 +25,8 @@ const formSchema = yup.object({
 });
 
 const PersonalDetails = ({ user }) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+
   // const state1 = {
   //   username: "abc",
   //   email: "abc@gmail.com",
@@ -46,9 +45,14 @@ const PersonalDetails = ({ user }) => {
   });
 
   const onSubmit = async (data) => {
-    const finalData = { ...data, _id: user._id };
+    const finalData = {
+      ...data,
+      _id: user._id,
+    };
+    console.log(finalData);
     try {
       await axios.put("/api/updateUser", finalData);
+      console.log(finalData);
       dispatch(updateUserLocalStorage(finalData));
       toast.success("Profile Updated");
     } catch (error) {
@@ -64,6 +68,10 @@ const PersonalDetails = ({ user }) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full  xl:w-2/3"
         >
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {user && <ProfilePicture user={user} />}
+          </div> */}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
@@ -80,9 +88,6 @@ const PersonalDetails = ({ user }) => {
                 </FormItem>
               )}
             />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="email"
@@ -98,6 +103,9 @@ const PersonalDetails = ({ user }) => {
                 </FormItem>
               )}
             />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="phonenumber"
@@ -113,9 +121,6 @@ const PersonalDetails = ({ user }) => {
                 </FormItem>
               )}
             />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="slackId"

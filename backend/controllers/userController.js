@@ -202,3 +202,19 @@ module.exports.updatePass = (req, res) => {
     res.status(400).json({ error });
   }
 };
+
+module.exports.updateProfilePicture = async (req, res) => {
+  const { profilePicture, _id } = req.body;
+  try {
+    const uploadProfilePicture = await User.findByIdAndUpdate(
+      { _id },
+      { profilePicture }
+    );
+    if (!uploadProfilePicture) {
+      res.status(400).json({ message: "The picture was not uploaded." });
+    }
+    res.status(200).json({ message: "The ProfilePicture updated." });
+  } catch (err) {
+    console.log(err);
+  }
+};

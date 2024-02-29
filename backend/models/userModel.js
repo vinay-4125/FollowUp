@@ -22,11 +22,15 @@ const userSchema = new mongoose.Schema(
     },
     slackId: {
       type: String,
-      unique: true,
+      // unique: true,
     },
     phonenumber: {
       type: String,
-      unique: true,
+      // unique: true,
+    },
+    profilePicture: {
+      Data: Buffer,
+      ContentType: String,
     },
     reminders: [
       {
@@ -49,8 +53,9 @@ userSchema.statics.login = async function (email, password) {
   if (user) {
     const auth = await bcrypt.compare(password, user.password);
     if (auth) {
-      const { username, email, _id, slackId, phonenumber } = user;
-      return { username, email, _id, slackId, phonenumber };
+      const { username, email, _id, slackId, phonenumber, profilePicture } =
+        user;
+      return { username, email, _id, slackId, phonenumber, profilePicture };
     } else {
       throw Error("Invalid credentials");
     }

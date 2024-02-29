@@ -25,7 +25,16 @@ export const userSlice = createSlice({
     updateUserLocalStorage: (state, action) => {
       const user = action.payload;
       localStorage.setItem("user", JSON.stringify({ user }));
-      state.user = user;
+      state.user = { ...state.user, user };
+    },
+    updateUserProfileToLocalStorage: (state, action) => {
+      const profilePicture = action.payload;
+      // const dataFromLocalStorage = localStorage.getItem("user");
+      state.user = {
+        ...state.user,
+        profilePicture,
+      };
+      localStorage.setItem("user", JSON.stringify(state.user));
     },
   },
 });
@@ -34,5 +43,6 @@ export const {
   setUserLocalStorage,
   deleteUserLocalStorage,
   updateUserLocalStorage,
+  updateUserProfileToLocalStorage,
 } = userSlice.actions;
 export default userSlice.reducer;

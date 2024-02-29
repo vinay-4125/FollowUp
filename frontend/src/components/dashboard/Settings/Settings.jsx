@@ -9,6 +9,7 @@ import Integration from "./Integration";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import ProfilePicture from "./ProfilePicture";
 
 const breadcrumbItems = [{ title: "Settings", link: "/dashboard/Settings" }];
 
@@ -56,10 +57,15 @@ const Settings = () => {
                 {item.value}
               </TabsTrigger>
             ))}
-        </TabsList>
+          </TabsList>
           <div className="min-h-full">
             <TabsContent value="Personal Details">
-              {user && <PersonalDetails user={user} />}
+              {user && (
+                <>
+                  <ProfilePicture user={user} />
+                  <PersonalDetails user={user} />
+                </>
+              )}
             </TabsContent>
             <TabsContent value="Password">
               {user && <Password user={user} />}
