@@ -29,12 +29,12 @@ export const userSlice = createSlice({
     },
     updateUserProfileToLocalStorage: (state, action) => {
       const profilePicture = action.payload;
-      // const dataFromLocalStorage = localStorage.getItem("user");
-      state.user = {
-        ...state.user,
-        profilePicture,
-      };
-      localStorage.setItem("user", JSON.stringify(state.user));
+      const dataFromLocalStorage = JSON.parse(localStorage.getItem("user"));
+      console.log(dataFromLocalStorage);
+      const updatedData = { ...dataFromLocalStorage.user, profilePicture };
+      console.log(updatedData);
+      localStorage.setItem("user", JSON.stringify(updatedData));
+      state.user = updatedData;
     },
   },
 });

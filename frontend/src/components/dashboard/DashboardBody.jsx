@@ -1,5 +1,6 @@
 import { Heading } from "../ui/heading";
 import { Separator } from "../ui/separator";
+import DashboardMainBody from "./DashboardMainBody";
 
 const DashboardBody = () => {
   return (
@@ -8,6 +9,7 @@ const DashboardBody = () => {
         <Heading title={`Hi, Welcome back 👋🏻`} description={""} />
       </div>
       <Separator />
+      <DashboardMainBody />
     </div>
   );
 };

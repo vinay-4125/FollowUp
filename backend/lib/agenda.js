@@ -13,7 +13,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
+
 const agenda = new Agenda({ db: { address: process.env.MONGODBURL } });
+
+
 agenda.define("sendReminder", async (job) => {
   const reminder = await Reminder.findById(job.attrs.data.reminder._id);
   //   if (reminder.repeat) {
