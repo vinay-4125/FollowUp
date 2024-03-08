@@ -1,11 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
 
 const ForgetPassword = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -91,7 +90,7 @@ const ForgetPassword = () => {
             </div>
           </div>
         </div>
-        <Toaster position="bottom-left" />
+        <Toaster position="bottom-left" richColors/>
       </section>
     </>
   );

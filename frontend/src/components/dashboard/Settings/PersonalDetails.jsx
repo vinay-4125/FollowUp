@@ -49,14 +49,14 @@ const PersonalDetails = ({ user }) => {
       ...data,
       _id: user._id,
     };
-    console.log(finalData);
+    // console.log(finalData);
     try {
       await axios.put("/api/updateUser", finalData);
-      console.log(finalData);
+      // console.log(finalData);
       dispatch(updateUserLocalStorage(finalData));
       toast.success("Profile Updated");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error(error.message);
     }
   };

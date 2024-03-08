@@ -33,7 +33,7 @@ module.exports.getMembers = async (req, res) => {
 
 module.exports.getMemberFullname = async (req, res) => {
   try {
-    const name = await Member.find().select(["firstname", "lastname"]);
+    const name = await Member.find().select(["firstname", "lastname", "email"]);
     res.status(200).json({ fullname: name });
   } catch (error) {
     console.log(error);

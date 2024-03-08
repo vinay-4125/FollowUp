@@ -1,5 +1,5 @@
 const Agenda = require("agenda");
-const { Reminder } = require("../models/reminderModel");
+const User = require("../models/userModel");
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
@@ -13,13 +13,20 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-
+const client = require("twilio")(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 
 const agenda = new Agenda({ db: { address: process.env.MONGODBURL } });
 
-
 agenda.define("sendReminder", async (job) => {
-  const reminder = await Reminder.findById(job.attrs.data.reminder._id);
+  const jobVariable = job.attrs.data.reminder;
+  const user = await User.findById(jobVariable._userId).select(
+    "-profilePicture"
+  );
+  console.log(user);
+
   //   if (reminder.repeat) {
   //     if (reminder.repeat === "norepeat") {
   //       return;
@@ -32,10 +39,10 @@ agenda.define("sendReminder", async (job) => {
       name: "FollowUp.",
       address: process.env.MYEMAIL,
     }, // sender address
-    to: "vinaychaudhari4125@gmail.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<b>Hello world?</b>", // html body
+    to: jobVariable.listMembers, // list of receivers
+    subject: jobVariable.reminderName, // Subject line
+    text: jobVariable.description, // plain text body
+    // html: "<b>Hello world?</b>", // html body
   };
 
   const sendMail = async (transporter, mailOptions) => {
@@ -46,10 +53,26 @@ agenda.define("sendReminder", async (job) => {
     }
   };
 
-  // sendMail(transporter, mailOptions);
-  console.log(
-    `Sending reminder to ${reminder._userId} for ${reminder.reminderName}\n Email sent`
-  );
+  if (jobVariable.notification.includes("Email")) {
+    sendMail(transporter, mailOptions);
+    console.log(
+      `Sending reminder to ${jobVariable._userId} for ${jobVariable.reminderName}\n Email sent`
+    );
+  }
+
+  if (jobVariable.notification.includes("Whatsapp")) {
+    client.messages
+      .create({
+        from: "whatsapp:+14155238886",
+        body: "Hello there!",
+        to: "whatsapp:+919327097402",
+      })
+      .then((message) => console.log(message.sid));
+  }
+
+  if (jobVariable.notification.includes("Slack")) {
+    console.log(`Sending msg to slack`);
+  }
 });
 
 module.exports = agenda;

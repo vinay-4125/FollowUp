@@ -40,6 +40,8 @@ module.exports.signup = async (req, res) => {
       const token = createToken(user._id);
       res.cookie("jwt", token, { maxAge: maxAge * 1000 });
       res.status(201).json({ user, token });
+    }else{
+      res.status(400).json({error:"Email already exists!!"})
     }
   } catch (err) {
     console.log(err);

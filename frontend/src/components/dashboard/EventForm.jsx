@@ -444,7 +444,7 @@ const EventForm = () => {
           </div>
         </DialogContent>
       </Dialog>
-      {/* <Toaster position="top-left" /> */}
+      {/* <Toaster position="bottom-left" /> */}
     </>
   );
 };

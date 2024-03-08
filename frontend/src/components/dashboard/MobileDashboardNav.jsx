@@ -4,7 +4,7 @@ import { User } from "lucide-react";
 import { Icons } from "../Icon";
 // import { Icons } from "../Icon";
 
-const DashboardNav = ({ items, setOpen }) => {
+const MobileDashboardNav = ({ items, setOpen }) => {
   const location = useLocation();
   if (!items?.length) {
     return null;
@@ -16,7 +16,7 @@ const DashboardNav = ({ items, setOpen }) => {
         const Icon = Icons[item.icon || "arrowRight"];
         return (
           item.href && (
-            <Link key={index} to={item.href}>
+            <Link key={index} to={item.href} onClick={() => setOpen(false)}>
               <span
                 className={cn(
                   "group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
@@ -35,4 +35,4 @@ const DashboardNav = ({ items, setOpen }) => {
   );
 };
 
-export default DashboardNav;
+export default MobileDashboardNav;

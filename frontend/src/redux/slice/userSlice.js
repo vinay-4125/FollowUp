@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: null,
-  accessToken: "",
+  token: "",
 };
 
 export const userSlice = createSlice({
@@ -14,25 +14,25 @@ export const userSlice = createSlice({
       localStorage.setItem("user", JSON.stringify({ user }));
       localStorage.setItem("token", JSON.stringify({ token }));
       state.user = user;
-      state.accessToken = token;
+      state.token = token;
     },
     deleteUserLocalStorage: (state) => {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
       state.user = null;
-      state.accessToken = "";
+      state.token = "";
     },
     updateUserLocalStorage: (state, action) => {
       const user = action.payload;
-      localStorage.setItem("user", JSON.stringify({ user }));
-      state.user = { ...state.user, user };
+      localStorage.setItem("user", JSON.stringify({ ...state.user, ...user }));
+      state.user = { ...state.user, ...user };
     },
     updateUserProfileToLocalStorage: (state, action) => {
       const profilePicture = action.payload;
       const dataFromLocalStorage = JSON.parse(localStorage.getItem("user"));
-      console.log(dataFromLocalStorage);
+      // p.log(dataFromLocalStorage);
       const updatedData = { ...dataFromLocalStorage.user, profilePicture };
-      console.log(updatedData);
+      // console.log(updatedData);
       localStorage.setItem("user", JSON.stringify(updatedData));
       state.user = updatedData;
     },

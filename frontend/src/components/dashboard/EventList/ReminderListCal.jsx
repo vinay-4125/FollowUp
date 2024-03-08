@@ -1,7 +1,8 @@
+import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import moment from "moment";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useSelector } from "react-redux";
@@ -9,15 +10,7 @@ import { useSelector } from "react-redux";
 const ReminderListCal = () => {
   const localizer = momentLocalizer(moment);
   const { user } = useSelector((state) => state.user);
-
-  // function getRandomColor() {
-  //   var letters = "0123456789ABCDEF";
-  //   var color = "#";
-  //   for (var i = 0; i < 6; i++) {
-  //     color += letters[Math.floor(Math.random() * 16)];
-  //   }
-  //   return color;
-  // }
+  const clickRef = useRef(null);
 
   const fetchMembers = async () => {
     const res = await axios.get(`/api/allRemindersById/${user._id}`);
@@ -42,12 +35,70 @@ const ReminderListCal = () => {
     queryKey: ["getAllReminders"],
     queryFn: fetchMembers,
   });
-  // const components = useMemo(
-  //   () => ({
-  //     //   toolbar: ,
-  //   }),
-  //   []
-  // );
+
+  const buildMessage = (calEvent, eventType) => {
+    return `Event ${eventType}: ${calEvent.title} at ${calEvent.start}`;
+  };
+
+  useEffect(() => {
+    return () => {
+      window.clearTimeout(clickRef?.current);
+    };
+  }, []);
+
+  const onSelectEvent = useCallback((calEvent) => {
+    window.clearTimeout(clickRef?.current);
+    clickRef.current = window.alert(buildMessage(calEvent, "onSelectEvent"));
+  }, []);
+
+  const CustomToolbar = (toolbar) => {
+    const goToBack = () => {
+      toolbar.onNavigate("PREV");
+    };
+
+    const goToToday = () => {
+      toolbar.onNavigate("TODAY");
+    };
+
+    const goToNext = () => {
+      toolbar.onNavigate("NEXT");
+    };
+
+    const goToView = (view) => {
+      toolbar.onView(view);
+    };
+
+    return (
+      <div className="flex justify-between items-center mb-4">
+        <span className="rbc-btn-group">
+          <Button variant="outline" onClick={goToBack}>
+            Back
+          </Button>
+          <Button variant="outline" onClick={goToToday}>
+            Today
+          </Button>
+          <Button variant="outline" onClick={goToNext}>
+            Next
+          </Button>
+        </span>
+        <Button variant="outline" className="cursor-default">{toolbar.label}</Button>
+        <span className="rbc-btn-group">
+          <Button variant="outline" onClick={() => goToView("month")}>
+            Month
+          </Button>
+          <Button variant="outline" onClick={() => goToView("week")}>
+            Week
+          </Button>
+          <Button variant="outline" onClick={() => goToView("day")}>
+            Day
+          </Button>
+          <Button variant="outline" onClick={() => goToView("agenda")}>
+            Agenda
+          </Button>
+        </span>
+      </div>
+    );
+  };
 
   return (
     <div className="h-screen mt-5 pb-16 overflow-y-auto">
@@ -67,6 +118,10 @@ const ReminderListCal = () => {
           isSelected,
           style: { backgroundColor: event.backgroundColor },
         })}
+        onSelectEvent={onSelectEvent}
+        components={{
+          toolbar: CustomToolbar,
+        }}
       />
     </div>
   );

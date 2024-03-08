@@ -1,5 +1,6 @@
 const express = require("express");
 const authController = require("../controllers/userController");
+const { userVerification } = require("../middleware/userMiddleware");
 const routes = express.Router();
 
 routes.post("/auth/signup", authController.signup);
@@ -18,6 +19,10 @@ routes.put("/updateUser", authController.updateUser);
 
 routes.put("/updatepass", authController.updatePass);
 
-routes.post("/updateProfilePicture", authController.updateProfilePicture);
+routes.post(
+  "/updateProfilePicture",
+  userVerification,
+  authController.updateProfilePicture
+);
 
 module.exports = routes;

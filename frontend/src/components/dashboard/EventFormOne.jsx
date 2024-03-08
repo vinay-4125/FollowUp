@@ -421,6 +421,7 @@ const EventFormOne = () => {
           </Form>
         </DialogContent>
       </Dialog>
+      <Toaster position="bottom-left" />
     </>
   );
 };

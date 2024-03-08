@@ -30,16 +30,20 @@ const Signup = () => {
       // console.log(data.user);
       navigate("/");
     } catch (error) {
-      const { all, email, password } = error.response.data.error;
-      if (all) {
-        toast.error(all);
-      }
-      if (email) {
-        toast.error(email);
-      }
-      if (password) {
-        toast.error(password);
-      }
+      // console.log(error.response.data.error);
+      // const { all, email, password } = error.response.data.error;
+      // if (all) {
+      //   toast.error(all);
+      // }
+      // if (email) {
+      //   toast.error(email);
+      // }
+      // if (password) {
+      //   toast.error(password);
+      // }
+      console.log(error.response.data.error);
+      toast.error(error.response.data.error);
+      // console.log(error.response.data.error);
     }
   };
 
@@ -188,7 +192,7 @@ const Signup = () => {
           </p>
         </div>
       </div>
-      <Toaster position="bottom left" />
+      <Toaster position="bottom-left" richColors />
     </section>
   );
 };

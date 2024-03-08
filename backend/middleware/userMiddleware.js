@@ -17,10 +17,13 @@ module.exports.userVerification = (req, res, next) => {
         const user = await User.findById(decodedToken.id).select(
           "-password -reminders -createdAt -updatedAt"
         );
+        console.log("middleware!!");
         // const { username, email, reminders } = user;
         // const userData = { username, email, reminders };
         if (user) {
-          return res.json({ user: user, token });
+          // return res.json({ user: user, token });
+          req.body = user;
+          next();
         }
       }
     });

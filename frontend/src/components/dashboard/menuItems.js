@@ -12,7 +12,7 @@ const menuItems = [
   {
     title: "ReminderList",
     href: "/dashboard/reminderlist",
-    icon: "table",
+    icon: "calendar",
   },
   // {
   //   title: "Profile",

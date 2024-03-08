@@ -23,7 +23,7 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 // import {
 //   Select,
@@ -46,6 +46,7 @@ import {
 import { useSelector } from "react-redux";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useNavigate } from "react-router-dom";
+import { Separator } from "../ui/separator";
 
 const formSchema = yup.object({
   reminderName: yup.string().required(),
@@ -63,21 +64,30 @@ const formSchema = yup.object({
 
 const EventFormTwo = () => {
   const animatedComponents = makeAnimated();
-
   const [open, setOpen] = useState(false);
+
+  const queryClient = useQueryClient();
+  queryClient.invalidateQueries({
+    queryKey: ["getMembers"],
+    refetchType: "active",
+  });
 
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
-
   const fetchMembers = async () => {
     const res = await axios.get("/api/getMemberFullname");
     const { fullname } = res.data;
+    // const formattedData = fullname.map((member) => ({
+    //   value: `${member.firstname} ${member.lastname}`,
+    //   label: `${member.firstname} ${member.lastname}`,
+    // }));
+
     const formattedData = fullname.map((member) => ({
-      value: `${member.firstname} ${member.lastname}`,
-      label: `${member.firstname} ${member.lastname}`,
+      value: `${member.email}`,
+      label: `${member.email}`,
     }));
 
-    return formattedData;
+    return formattedData.reverse();
   };
 
   const { data: membersName } = useQuery({
@@ -94,6 +104,15 @@ const EventFormTwo = () => {
     "#9B59B6",
     "#E74C3C",
     "#578885",
+    "#94a3b8",
+    "#f87171",
+    "#fb923c",
+    "#fbbf24",
+    "#34d399",
+    "#22d3ee",
+    "#818cf8",
+    "#e879f9",
+    "#fb7185",
   ];
 
   const repeatData = [
@@ -107,7 +126,6 @@ const EventFormTwo = () => {
   const existingFields = Object.keys(user)
     .filter((field) => fields.includes(field))
     .map((field) => {
-      // Map field names to desired names
       if (field === "email") {
         return "Email";
       } else if (field === "phonenumber") {
@@ -168,13 +186,14 @@ const EventFormTwo = () => {
       data.userId = user._id;
       console.log(data);
       const res = await axios.post("/api/reminder", data);
-      toast("Event has been created", {
-        description: res.data.message,
-        action: {
-          label: "Undo",
-          onClick: () => console.log("Undo"), //! To implement undo function to undo the event.
-        },
-      });
+      // toast("Event has been created", {
+      //   description: res.data.message,
+      //   action: {
+      //     label: "Undo",
+      //     onClick: () => console.log("Undo"), //! To implement undo function to undo the event.
+      //   },
+      // });
+      form.reset();
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -238,12 +257,12 @@ const EventFormTwo = () => {
                             </SelectTrigger>
                             <SelectContent>
                               <SelectGroup>
-                                <SelectLabel>Reminder Colors</SelectLabel>
+                                {/* <SelectLabel>Reminder Colors</SelectLabel> */}
                                 {colors.map((item) => (
                                   <SelectItem
                                     key={item}
                                     style={{ backgroundColor: item }}
-                                    className="rounded-md"
+                                    className="rounded-md h-full"
                                     // className={`bg-[${item}] rounded-full`}
                                     value={item}
                                   >
@@ -295,6 +314,7 @@ const EventFormTwo = () => {
                           <Input
                             type="date"
                             {...field}
+                            className=""
                             min={new Date().toISOString().split("T")[0]}
                           />
                         </FormControl>
@@ -383,11 +403,7 @@ const EventFormTwo = () => {
                           >
                             {existingFields &&
                               existingFields.map((item, index) => (
-                                <ToggleGroupItem
-                                  key={index}
-                                  value={item}
-                                  aria-label="Toggle strikethrough"
-                                >
+                                <ToggleGroupItem key={index} value={item}>
                                   {item}
                                 </ToggleGroupItem>
                               ))}
@@ -452,20 +468,30 @@ const EventFormTwo = () => {
                   variant="outline"
                   key={"cancel"}
                   type="button"
-                  // onClick={() => setOpenModal(false)}
+                  onClick={() => {
+                    setOpen(false);
+                    form.reset();
+                  }}
                 >
                   Cancel
                 </Button>
-                <Button type="submit">Save</Button>
+                <Button
+                  type="submit"
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                >
+                  Save
+                </Button>
               </div>
-              <div>
+              {/* <div>
                 <pre>{JSON.stringify(form.watch(), null, 2)}</pre>
-              </div>
+              </div> */}
             </form>
           </Form>
         </DialogContent>
       </Dialog>
-      <Toaster />
+      <Toaster position="top-left" />
     </>
   );
 };

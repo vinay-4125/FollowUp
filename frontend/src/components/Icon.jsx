@@ -1,6 +1,7 @@
 import {
   AlertTriangle,
   ArrowRight,
+  CalendarDays,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -59,6 +60,7 @@ export const Icons = {
   laptop: Laptop,
   table: TableProperties,
   check: Check,
+  calendar: CalendarDays, 
   // gitHub: ({ ...props }) => (
   //   <svg
   //     aria-hidden="true"

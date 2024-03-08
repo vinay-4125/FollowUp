@@ -91,7 +91,7 @@ const ResetPassword = () => {
             </div>
           </div>
         </div>
-        <Toaster />
+        <Toaster position="bottom-left"/>
       </section>
     </>
   );

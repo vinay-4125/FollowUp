@@ -1,8 +1,8 @@
 import { AlignLeft } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import DashboardNav from "./DashboardNav";
 import menuItems from "./menuItems";
+import MobileDashboardNav from "./MobileDashboardNav";
 
 export function MobileSidebar() {
   const items = useMemo(() => menuItems, []);
@@ -20,7 +20,7 @@ export function MobileSidebar() {
                 Overview
               </h2>
               <div className="space-y-1">
-                <DashboardNav items={items} setOpen={setOpen} />
+                <MobileDashboardNav items={items} setOpen={setOpen} />
               </div>
             </div>
           </div>
