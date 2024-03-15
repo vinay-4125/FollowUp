@@ -27,16 +27,18 @@ const Login = () => {
 
       navigate("/dashboard");
     } catch (error) {
-      const { all, email, password } = error.response.data.error;
-      if (all) {
-        toast.error(all);
-      }
-      if (email) {
-        toast.error(email);
-      }
-      if (password) {
-        toast.error(password);
-      }
+      // const { all, email, password } = error.response.data.error;
+      // if (all) {
+      //   toast.error(all);
+      // }
+      // if (email) {
+      //   toast.error(email);
+      // }
+      // if (password) {
+      //   toast.error(password);
+      // }
+      console.log(error.response.data.error);
+      toast.error(error.response.data.error);
     }
   };
 

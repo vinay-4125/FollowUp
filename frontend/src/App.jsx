@@ -20,6 +20,8 @@ import DashboardBody from "./components/dashboard/DashboardBody.jsx";
 import LandingPage from "./LandingPage.jsx";
 import ReminderList from "./components/dashboard/EventList/ReminderList.jsx";
 import ProtectedRoute from "./components/ProtectedRoutes.jsx";
+import { useEffect, useMemo } from "react";
+import { io } from "socket.io-client";
 
 // const ProtectedRoute = ({ path, element }) => {
 //   const { user } = useAuthContext();
@@ -58,7 +60,13 @@ const router = createBrowserRouter(
   )
 );
 
+const socket = io("/socket", {
+  withCredentials: true,
+});
+
 function App() {
+  socket.on("message", (message) => console.log(message));
+
   return (
     <>
       <RouterProvider router={router} />

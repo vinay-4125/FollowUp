@@ -1,0 +1,57 @@
+{{
+	userId: 'U06NVBHJRJS',
+	isEnterpriseInstall: false,
+	teamId: 'T06NTP2J621',
+	enterpriseId: undefined,
+	conversationId: 'C06NWHESSJF'
+  }
+  {
+	id: 'V06PBB8BPFU',
+	team_id: 'T06NTP2J621',
+	type: 'modal',
+	blocks: [
+	  {
+		type: 'input',
+		block_id: 'IrdaK',
+		label: [Object],
+		optional: false,
+		dispatch_action: false,
+		element: [Object]
+	  },
+	  {
+		type: 'input',
+		block_id: 'fb/2D',
+		label: [Object],
+		optional: false,
+		dispatch_action: false,
+		element: [Object]
+	  },
+	  {
+		type: 'section',
+		block_id: 'JMBGZ',
+		text: [Object],
+		accessory: [Object]
+	  },
+	  {
+		type: 'section',
+		block_id: '0Iwvk',
+		text: [Object],
+		accessory: [Object]
+	  }
+	],
+	private_metadata: '',
+	callback_id: '',
+	state: { values: { JMBGZ: [Object], '0Iwvk': [Object] } },
+	hash: '1710338049.ZwVyiJCa',
+	title: { type: 'plain_text', text: 'My App', emoji: true },
+	clear_on_close: false,
+	notify_on_close: false,
+	close: { type: 'plain_text', text: 'Cancel', emoji: true },
+	submit: { type: 'plain_text', text: 'Submit', emoji: true },
+	previous_view_id: null,
+	root_view_id: 'V06PBB8BPFU',
+	app_id: 'A06NN4UK97Y',
+	external_id: '',
+	app_installed_team_id: 'T06NTP2J621',
+	bot_id: 'B06NWM2MTRQ'
+  }}

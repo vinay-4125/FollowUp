@@ -1,6 +1,6 @@
 import axios from "axios";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Toaster, toast } from "sonner";
 import { setUserLocalStorage } from "@/redux/slice/userSlice";
@@ -9,6 +9,18 @@ import { useDispatch } from "react-redux";
 const Signup = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const auth = async () => {
+    const res = await axios.post("/api/requestGoogle");
+    console.log(res.data);
+    window.location.href = res.data.url;
+    oauth();
+  };
+
+  const oauth = async () => {
+    const res = await axios.get("/api/oauth");
+    console.log(res.data);
+  };
 
   const [formData, setFormData] = useState({
     username: "",
@@ -144,6 +156,7 @@ const Signup = () => {
             <hr className="my-6 border-gray-300 w-full" />
             <button
               type="button"
+              onClick={() => auth()}
               className="w-full block bg-white hover:bg-gray-100 focus:bg-gray-100 text-gray-900 font-semibold rounded-lg px-4 py-3 border border-gray-300"
             >
               <div className="flex items-center justify-center">

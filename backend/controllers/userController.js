@@ -2,6 +2,8 @@ const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
+const { OAuth2Client } = require("google-auth-library");
+const axios = require("axios");
 
 const secret = process.env.SECRET;
 const maxAge = 3 * 24 * 60 * 60;
@@ -36,12 +38,18 @@ module.exports.signup = async (req, res) => {
   try {
     const findUserByEmail = await User.findOne({ email });
     if (!findUserByEmail) {
-      const user = await User.create({ username, email, password });
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      const user = await User.create({
+        username,
+        email,
+        password: hashedPassword,
+      });
       const token = createToken(user._id);
       res.cookie("jwt", token, { maxAge: maxAge * 1000 });
       res.status(201).json({ user, token });
-    }else{
-      res.status(400).json({error:"Email already exists!!"})
+    } else {
+      res.status(400).json({ error: "Email already exists!!" });
     }
   } catch (err) {
     console.log(err);
@@ -57,12 +65,10 @@ module.exports.login = async (req, res) => {
     const user = await User.login(email, password);
     const token = createToken(user._id);
     res.cookie("jwt", token, { maxAge: maxAge * 1000 });
-    // const { username, email: userEmail, reminders } = user;
-    // const userData = { username, userEmail, reminders };
     res.status(200).json({ user, token });
   } catch (err) {
-    const error = handleErrors(err);
-    res.status(400).json({ error });
+    // const error = handleErrors(err);
+    res.status(400).json({ error: err.message });
   }
 };
 
@@ -218,5 +224,90 @@ module.exports.updateProfilePicture = async (req, res) => {
     res.status(200).json({ message: "The ProfilePicture updated." });
   } catch (err) {
     console.log(err);
+  }
+};
+
+module.exports.googleRequestUrl = (req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:5000");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Referrer-Policy", "no-referrer-when-downgrade");
+  const redirectURL = "http://localhost:8000/api/oauth";
+
+  const oAuth2Client = new OAuth2Client(
+    process.env.CLIENT_ID,
+    process.env.CLIENT_SECRET,
+    redirectURL
+  );
+
+  const authorizeUrl = oAuth2Client.generateAuthUrl({
+    access_type: "offline",
+    scope: [
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "openid",
+      "https://www.googleapis.com/auth/userinfo.email",
+    ],
+    prompt: "consent",
+  });
+
+  res.json({ url: authorizeUrl });
+};
+
+async function getUserData(access_token) {
+  const res = await axios.get(
+    `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
+  );
+  return res.data;
+}
+
+module.exports.oauth = async (req, res, next) => {
+  const code = req.query.code;
+  console.log(code);
+  try {
+    const redirectURL = "http://localhost:8000/api/oauth";
+    const oAuth2Client = new OAuth2Client(
+      process.env.CLIENT_ID,
+      process.env.CLIENT_SECRET,
+      redirectURL
+    );
+    const result = await oAuth2Client.getToken(code);
+    oAuth2Client.setCredentials(result.tokens);
+    const user = oAuth2Client.credentials;
+    console.log("credentials", user);
+    const userData = await getUserData(user.access_token);
+    try {
+      const { name, picture, email } = userData;
+      const findUserByEmail = await User.findOne({ email });
+      if (!findUserByEmail) {
+        const user = await User.create({
+          username: name,
+          profilePicture: picture,
+          email,
+        });
+        const token = createToken(user._id);
+        res.cookie("jwt", token, { maxAge: maxAge * 1000 });
+        res.status(201).json({ user, token });
+      }
+      // res.status(201).json({user,token})
+      res.status(200).json({ findUserByEmail });
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ error });
+    }
+  } catch (error) {
+    console.log("Error logging in with OAuth user", error);
+  }
+  // res.redirect(303, "http://localhost:5000/");
+};
+
+module.exports.getUserDetailData = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById({ _id: userId })
+      .populate("members")
+      .populate("reminders");
+    res.status(200).json({ user });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
   }
 };

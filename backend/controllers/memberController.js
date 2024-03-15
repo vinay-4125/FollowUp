@@ -1,7 +1,8 @@
 const Member = require("../models/memberModel");
+const User = require("../models/userModel");
 
 module.exports.addMembers = async (req, res) => {
-  const { firstname, lastname, email, phonenumber, slackId } = req.body;
+  const { firstname, lastname, email, phonenumber, slackId, userId } = req.body;
   try {
     const member = await Member.create({
       firstname,
@@ -9,7 +10,14 @@ module.exports.addMembers = async (req, res) => {
       email,
       phonenumber,
       slackId,
+      userId,
     });
+    const updateUserDocument = await User.findByIdAndUpdate(
+      {
+        _id: userId,
+      },
+      { $push: { members: member } }
+    );
     res.status(200).json({ message: "Member added" });
   } catch (error) {
     // console.log(error);
@@ -22,8 +30,9 @@ module.exports.addMembers = async (req, res) => {
 };
 
 module.exports.getMembers = async (req, res) => {
+  const { userId } = req.params;
   try {
-    const member = await Member.find();
+    const member = await Member.find({ userId });
     res.status(200).json({ member });
   } catch (error) {
     console.log(error);

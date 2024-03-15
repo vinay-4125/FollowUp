@@ -1,0 +1,2 @@
+: to delete member id from user object when member is deleted (DELETE CASCADE)
+: 

@@ -1,7 +1,8 @@
-const agenda = require("../lib/agenda");
+const { agenda } = require("../lib/agenda");
 const { Reminder } = require("../models/reminderModel");
 const User = require("../models/userModel");
 const ArrayReminder = require("../models/arrayReminderModel");
+const manifest = require("../manifest.json");
 
 module.exports.reminder = async (req, res) => {
   try {
@@ -89,4 +90,13 @@ module.exports.reminder = async (req, res) => {
     console.log(err);
     res.status(400).json({ err });
   }
+};
+
+module.exports.addSlackButton = (req, res) => {
+  const oauthRedirect = manifest.oauth_config.redirect_urls[0];
+  const botScopes = manifest.oauth_config.scopes.bot;
+  res.redirect(
+    303,
+    `https://3db5-49-36-91-22.ngrok-free.app/slack/install/workspace`
+  );
 };

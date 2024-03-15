@@ -17,6 +17,7 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { Toaster, toast } from "sonner";
 import axios from "axios";
+import { useSelector } from "react-redux";
 const breadcrumbItems = [
   { title: "Member", link: "/dashboard/addmember" },
   { title: "Add", link: "/dashboard/addmember/new" },
@@ -31,6 +32,8 @@ const formSchema = yup.object({
 });
 
 const AddMemberForm = () => {
+  const { user } = useSelector((state) => state.user);
+
   const form = useForm({
     defaultValues: {
       firstname: "",
@@ -44,8 +47,9 @@ const AddMemberForm = () => {
   });
 
   const onSubmit = async (data) => {
+    const finalData = { ...data, userId: user._id };
     try {
-      await axios.post("/api/addmember", data);
+      await axios.post("/api/addmember", finalData);
       toast.success("Member added");
     } catch (error) {
       console.log(error);

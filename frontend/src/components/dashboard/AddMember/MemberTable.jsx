@@ -1,4 +1,10 @@
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
@@ -35,6 +41,8 @@ import { useState } from "react";
 const MemberTable = ({ data, columns }) => {
   const [sorting, setSorting] = useState([]);
   const [filtering, setFiltering] = useState("");
+  const [columnVisibility, setColumnVisibility] = useState({});
+
   const pageSizeOptions = [10, 20, 30, 40, 50];
   const table = useReactTable({
     data,
@@ -43,9 +51,11 @@ const MemberTable = ({ data, columns }) => {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
     state: {
       sorting,
       globalFilter: filtering,
+      columnVisibility,
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setFiltering,
@@ -53,12 +63,40 @@ const MemberTable = ({ data, columns }) => {
 
   return (
     <>
-      <Input
-        className="w-full md:max-w-sm"
-        placeholder="Search..."
-        value={filtering}
-        onChange={(e) => setFiltering(e.target.value)}
-      />
+      <div className="flex items-center py-4">
+        <Input
+          className="w-full md:max-w-sm"
+          placeholder="Search..."
+          value={filtering}
+          onChange={(e) => setFiltering(e.target.value)}
+        />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Columns
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       <ScrollArea className="rounded-md border h-[calc(80vh-220px)]">
         <Table className="relative">
           <TableHeader>

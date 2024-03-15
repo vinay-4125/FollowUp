@@ -15,6 +15,12 @@ export default defineConfig({
     host: "127.0.0.1",
     proxy: {
       "/api": "http://localhost:8000/",
+      "/socket": {
+        target: "http://localhost:8000/",
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+      },
     },
   },
 });

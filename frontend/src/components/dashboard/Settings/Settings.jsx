@@ -51,7 +51,7 @@ const Settings = () => {
         <Separator />
 
         <Tabs defaultValue="Personal Details" className="h-screen">
-          <TabsList className="h-12 mb-5 text-sm sm:text-base">
+          <TabsList className="mb-5 text-sm sm:text-base flex-wrap h-fit">
             {tabValue.map((item, id) => (
               <TabsTrigger key={id} value={item.value} className="text-md h-10">
                 {item.value}

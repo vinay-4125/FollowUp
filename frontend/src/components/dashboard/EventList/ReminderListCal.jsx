@@ -69,7 +69,7 @@ const ReminderListCal = () => {
     };
 
     return (
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
         <span className="rbc-btn-group">
           <Button variant="outline" onClick={goToBack}>
             Back
@@ -81,7 +81,9 @@ const ReminderListCal = () => {
             Next
           </Button>
         </span>
-        <Button variant="outline" className="cursor-default">{toolbar.label}</Button>
+        <Button variant="outline" className="cursor-default">
+          {toolbar.label}
+        </Button>
         <span className="rbc-btn-group">
           <Button variant="outline" onClick={() => goToView("month")}>
             Month
@@ -101,7 +103,7 @@ const ReminderListCal = () => {
   };
 
   return (
-    <div className="h-screen mt-5 pb-16 overflow-y-auto">
+    <div className="h-screen mt-5 md:pb-16 overflow-y-auto">
       <Calendar
         localizer={localizer}
         events={reminders}

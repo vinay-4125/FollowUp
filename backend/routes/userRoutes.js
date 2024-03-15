@@ -19,10 +19,12 @@ routes.put("/updateUser", authController.updateUser);
 
 routes.put("/updatepass", authController.updatePass);
 
-routes.post(
-  "/updateProfilePicture",
-  userVerification,
-  authController.updateProfilePicture
-);
+routes.post("/updateProfilePicture", authController.updateProfilePicture);
+
+routes.post("/requestGoogle", authController.googleRequestUrl);
+
+routes.get("/oauth", authController.oauth);
+
+routes.get('/alluserdetaildata/:userId',authController.getUserDetailData)
 
 module.exports = routes;

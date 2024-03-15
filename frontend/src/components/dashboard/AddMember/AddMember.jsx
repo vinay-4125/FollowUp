@@ -9,13 +9,15 @@ import MemberTable from "./MemberTable";
 import MemberAction from "./MemberAction";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
 const breadcrumbItems = [{ title: "Member", link: "/dashboard/Member" }];
 
 const AddMember = () => {
   // const data = useMemo(() => movies, []);
+  const { user } = useSelector((state) => state.user);
   const fetchMembers = async () => {
-    const res = await axios.get("/api/getmembers");
+    const res = await axios.get(`/api/getmembers/${user._id}`);
     return res.data.member;
   };
 
@@ -28,6 +30,7 @@ const AddMember = () => {
     {
       header: "Firstname",
       accessorKey: "firstname",
+      enableHiding: false,
     },
     {
       header: "Lastname",
@@ -47,6 +50,7 @@ const AddMember = () => {
     },
     {
       id: "actions",
+      enableHiding: false,
       header: "Actions",
       cell: ({ row }) => <MemberAction data={row.original} />,
     },

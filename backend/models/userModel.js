@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "Please enter a password"],
+      // required: [true, "Please enter a password"],
       minlength: [6, "Minimum length of character is 6 character"],
     },
     slackId: {
@@ -38,15 +38,21 @@ const userSchema = new mongoose.Schema(
         ref: "reminder",
       },
     ],
+    members: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "member",
+      },
+    ],
   },
   { timestamps: true }
 );
 
-userSchema.pre("save", async function (next) {
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
+// userSchema.pre("save", async function (next) {
+//   const salt = await bcrypt.genSalt(10);
+//   this.password = await bcrypt.hash(this.password, salt);
+//   next();
+// });
 
 userSchema.statics.login = async function (email, password) {
   const user = await User.findOne({ email });
