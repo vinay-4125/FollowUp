@@ -6,9 +6,7 @@ import PersonalDetails from "./PersonalDetails";
 import Password from "./Password";
 import PlanAndPricing from "./PlanAndPricing";
 import Integration from "./Integration";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import ProfilePicture from "./ProfilePicture";
 
 const breadcrumbItems = [{ title: "Settings", link: "/dashboard/Settings" }];

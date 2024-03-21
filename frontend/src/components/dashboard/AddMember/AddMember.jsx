@@ -84,10 +84,12 @@ const AddMember = () => {
         <BreadCrumb items={breadcrumbItems} />
 
         <div className="flex items-start justify-between">
-          <Heading
-            title={`Members ${data?.length}`}
-            description="Manage members"
-          />
+          {data && (
+            <Heading
+              title={`Members ${data?.length}`}
+              description="Manage members"
+            />
+          )}
 
           <Link
             to={"/dashboard/addmember/new"}

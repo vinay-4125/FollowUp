@@ -1,5 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const ArrayReminder = require("../models/arrayReminderModel");
+const io = require("../index.js");
 
 module.exports.allReminders = async (req, res) => {
   try {
@@ -32,12 +33,39 @@ module.exports.allReminders = async (req, res) => {
 
 module.exports.allRemindersById = async (req, res) => {
   const { id } = req.params;
-
   try {
     const allData = await ArrayReminder.findOne({ userId: id });
+    // const allData = await ArrayReminder.aggregate([
+    //   {
+    //     $match: {
+    //       userId: id,
+    //     },
+    //   },
+    //   {
+    //     $unwind: "$reminders",
+    //   },
+    //   {
+    //     $addFields: {
+    //       "reminders.combinedDateTime": {
+    //         $concat: ["$reminders.date", "T", "$reminders.time"],
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $sort: {
+    //       "reminders.combinedDateTime": 1,
+    //     },
+    //   },
+    //   {
+    //     $group: {
+    //       _id: "$_id",
+    //       reminders: { $push: "$reminders" },
+    //     },
+    //   },
+    // ]);
     res.status(200).json({ allData });
   } catch (err) {
     console.log(err);
-    res.status(400).json({ error });
+    res.status(400).json({ err });
   }
 };

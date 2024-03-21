@@ -7,6 +7,7 @@ const axios = require("axios");
 
 const secret = process.env.SECRET;
 const maxAge = 3 * 24 * 60 * 60;
+
 const createToken = (id) => {
   return jwt.sign({ id }, secret, { expiresIn: maxAge });
 };
@@ -311,3 +312,41 @@ module.exports.getUserDetailData = async (req, res) => {
     res.status(400).json({ error });
   }
 };
+
+// module.exports.getUserId = (req, res) => {
+//   const token = req.cookies.jwt;
+//   if (!token) {
+//     return res.status(401).json({ message: "No token,authorization denied." });
+//   }
+//   try {
+//     jwt.verify(token, process.env.SECRET, async (err, decodedToken) => {
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         console.log("id", decodedToken.id);
+//         res.status(200).json({ decodedToken });
+//       }
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+module.exports.updateUserSlackId = (req, res) => {
+  const { slackId } = req.body;
+  console.log(slackId);
+};
+
+
+
+// module.exports.sendUserId = (req, res) => {
+//   const { _userId } = req.body;
+//   userId = _userId;
+//   try {
+//     console.log(_userId);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400).json({ error });
+//   }
+// };
+

@@ -7,25 +7,41 @@ const userAuthRoutes = require("./routes/userRoutes");
 const reminderRoutes = require("./routes/reminderRoutes");
 const memberRoutes = require("./routes/memberRoutes");
 const agendaRoutes = require("./routes/agendaRoutes");
-const { slackMiddleware } = require("./lib/agenda");
+const { slackMiddleware, funcIO, getUserId } = require("./lib/agenda");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const { socket } = require("./controllers/agendaController");
+const { userVerification } = require("./middleware/userMiddleware");
 // const { WebClient } = require("@slack/web-api");
 const PORT = process.env.PORT;
 const dbURL = process.env.MONGODBURL;
 
 mongoose.connect(dbURL).then(() => console.log("Mongodb connected"));
 
+var corsOptions = {
+  origin: ["http://localhost:5001", "http://localhost:5000"],
+  optionsSuccessStatus: 200, // For legacy browser support
+};
 const app = express();
-const server = createServer(app);
-const io = new Server(server);
+app.use(cors(corsOptions));
 
-io.on("connection", (socket) => {
-  console.log("userId", socket.id);
-  io.emit("message", socket.id);
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
 });
 
-app.use(cors());
+// io.on("connection", (socket) => {
+//   console.log("socket", socket.id);
+//   io.emit("message", socket.id);
+//   socket.on("disconnect", () => {
+//     console.log("disconnected");
+//   });
+// });
+
+funcIO(io);
+
 app.use(slackMiddleware);
 app.use(express.json({ limit: "10mb" }));
 app.use(cookiePraser());
@@ -33,7 +49,7 @@ app.use("/api", userAuthRoutes);
 app.use("/api", reminderRoutes);
 app.use("/api", memberRoutes);
 app.use("/api", agendaRoutes);
-
+app.post("/api/sendUserId", getUserId);
 app.get("/", (req, res) => res.send("HOMEPAGE"));
 app.get("/dashboard", (req, res) => {
   res.send("DashboardPage");
@@ -58,3 +74,5 @@ app.get("/dashboard", (req, res) => {
 server.listen(PORT, () =>
   console.log(`Server is listening on http://localhost:${PORT}`)
 );
+
+module.exports = io;

@@ -52,6 +52,9 @@ const UserNav = () => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => navigate("/dashboard/")}>
+            Dashboard
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate("/dashboard/settings")}>
             Profile
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>

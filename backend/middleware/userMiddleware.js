@@ -3,31 +3,36 @@ const User = require("../models/userModel");
 
 module.exports.userVerification = (req, res, next) => {
   const token = req.cookies.jwt;
-
+  // console.log(token);
   if (!token) {
-    return res.status(401).json({ message: "No token, authorization denied" });
+    // return res.redirect(401, "/login");
+    return res.json({ message: "No token, authorization denied" });
   }
   try {
     jwt.verify(token, process.env.SECRET, async (err, decodedToken) => {
       if (err) {
-        console.log(err);
-        res.redirect("/login");
+        res.clearCookie("token");
+        return res
+          .status(401)
+          .json({ message: "No token, authorization denied" });
       } else {
         // console.log(decodedToken);
         const user = await User.findById(decodedToken.id).select(
           "-password -reminders -createdAt -updatedAt"
         );
-        console.log("middleware!!");
+        // console.log("middleware!!");
         // const { username, email, reminders } = user;
         // const userData = { username, email, reminders };
-        if (user) {
-          // return res.json({ user: user, token });
-          req.body = user;
-          next();
-        }
+        // if (user) {
+        // return res.json({ user: user, token });
+        req.userData = user;
+        next();
+        // }
       }
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    return res
+      .status(401)
+      .json({ message: "Invalid token, authorization denied" });
   }
 };

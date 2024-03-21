@@ -2,6 +2,10 @@ const { default: mongoose } = require("mongoose");
 
 const usersSchema = mongoose.Schema(
   {
+    _userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     _id: String,
     team: { id: String, name: String },
     enterprise: { id: String, name: String },

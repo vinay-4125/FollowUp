@@ -3,7 +3,6 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
-  Routes,
 } from "react-router-dom";
 import Login from "./components/auth/Login.jsx";
 import Signup from "./components/auth/Signup.jsx";
@@ -18,10 +17,11 @@ import Settings from "./components/dashboard/Settings/Settings.jsx";
 import UpdateMember from "./components/dashboard/AddMember/UpdateMember.jsx";
 import DashboardBody from "./components/dashboard/DashboardBody.jsx";
 import LandingPage from "./LandingPage.jsx";
-import ReminderList from "./components/dashboard/EventList/ReminderList.jsx";
+import ReminderList from "./components/dashboard/ReminderList/ReminderList.jsx";
 import ProtectedRoute from "./components/ProtectedRoutes.jsx";
-import { useEffect, useMemo } from "react";
 import { io } from "socket.io-client";
+import { useEffect } from "react";
+import PublicRouteLogin from "./components/PublicRouteLogin.jsx";
 
 // const ProtectedRoute = ({ path, element }) => {
 //   const { user } = useAuthContext();
@@ -37,7 +37,9 @@ const router = createBrowserRouter(
     <Route>
       <Route path="/" element={<LandingPage />} />
 
-      <Route path="/login" element={<Login />} />
+      <Route element={<PublicRouteLogin />}>
+        <Route path="/login" element={<Login />} />
+      </Route>
       <Route path="/login/forgetpassword" element={<ForgetPassword />} />
       <Route path="/reset-password/:id" element={<ResetPassword />} />
       <Route path="/newinput" element={<NewInput />} />
@@ -60,13 +62,7 @@ const router = createBrowserRouter(
   )
 );
 
-const socket = io("/socket", {
-  withCredentials: true,
-});
-
 function App() {
-  socket.on("message", (message) => console.log(message));
-
   return (
     <>
       <RouterProvider router={router} />

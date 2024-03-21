@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import moment from "moment";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useSelector } from "react-redux";
+import HoverInfoCard from "./HoverInfoCard";
 
 const ReminderListCal = () => {
   const localizer = momentLocalizer(moment);
@@ -19,6 +20,10 @@ const ReminderListCal = () => {
       backgroundColor: reminder.color,
       start: new Date(`${reminder.date} ${reminder.time}`),
       end: new Date(`${reminder.date} ${reminder.time}`),
+      description: reminder.description,
+      date: reminder.date,
+      time: reminder.time,
+      notification: reminder.notification,
     }));
     // const reminders = res.data.allData.map((event) => ({
     //   title: event.data.reminder.reminderName,
@@ -69,7 +74,8 @@ const ReminderListCal = () => {
     };
 
     return (
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+      // <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+      <div className="flex flex-col justify-between items-center gap-5 mb-5 sm:gap-0 sm:flex-row">
         <span className="rbc-btn-group">
           <Button variant="outline" onClick={goToBack}>
             Back
@@ -123,6 +129,7 @@ const ReminderListCal = () => {
         onSelectEvent={onSelectEvent}
         components={{
           toolbar: CustomToolbar,
+          eventWrapper: HoverInfoCard,
         }}
       />
     </div>

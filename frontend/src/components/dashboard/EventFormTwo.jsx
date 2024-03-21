@@ -186,13 +186,18 @@ const EventFormTwo = () => {
       data.userId = user._id;
       console.log(data);
       const res = await axios.post("/api/reminder", data);
-      // toast("Event has been created", {
-      //   description: res.data.message,
-      //   action: {
-      //     label: "Undo",
-      //     onClick: () => console.log("Undo"), //! To implement undo function to undo the event.
-      //   },
-      // });
+      console.log("EVENTTWOFORM", res);
+      toast("Event has been created", {
+        description: res.data.message,
+        action: {
+          label: "Undo",
+          onClick: () => console.log("Undo"), //! To implement undo function to undo the event.
+        },
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["fetchUpcomingReminder"],
+        refetchType: "active",
+      });
       form.reset();
     } catch (error) {
       console.log(error);
@@ -201,7 +206,7 @@ const EventFormTwo = () => {
   };
 
   return (
-    <>
+    <div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <Button>
@@ -369,7 +374,6 @@ const EventFormTwo = () => {
                               //   },
                               //   }),
                               // }}
-                              className="react-select-class"
                               components={animatedComponents}
                               noOptionsMessage={() => "No more members"}
                               placeholder="Select Members..."
@@ -491,8 +495,8 @@ const EventFormTwo = () => {
           </Form>
         </DialogContent>
       </Dialog>
-      <Toaster position="top-left" />
-    </>
+      <Toaster position="bottom-left" />
+    </div>
   );
 };
 

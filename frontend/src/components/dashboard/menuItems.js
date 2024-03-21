@@ -5,14 +5,14 @@ const menuItems = [
     icon: "dashboard",
   },
   {
+    title: "ReminderList",
+    href: "/dashboard/reminderlist",
+    icon: "calendarRange",
+  },
+  {
     title: "Member",
     href: "/dashboard/addmember",
     icon: "employee",
-  },
-  {
-    title: "ReminderList",
-    href: "/dashboard/reminderlist",
-    icon: "calendar",
   },
   // {
   //   title: "Profile",

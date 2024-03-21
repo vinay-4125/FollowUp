@@ -25,6 +25,10 @@ routes.post("/requestGoogle", authController.googleRequestUrl);
 
 routes.get("/oauth", authController.oauth);
 
-routes.get('/alluserdetaildata/:userId',authController.getUserDetailData)
+routes.get("/alluserdetaildata/:userId", authController.getUserDetailData);
+
+// routes.post("/sendUserId", authController.sendUserId);
+
+// routes.get("/getuserid", authController.getUserId);
 
 module.exports = routes;

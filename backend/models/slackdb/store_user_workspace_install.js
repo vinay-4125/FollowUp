@@ -1,5 +1,5 @@
 const { SlackUser } = require("../slackidModel");
-const saveUserWorkspaceInstall = async function (installation) {
+const saveUserWorkspaceInstall = async function (installation, _userId) {
   const resp = await SlackUser.updateOne(
     { _id: installation.team.id },
     {
@@ -8,6 +8,7 @@ const saveUserWorkspaceInstall = async function (installation) {
       enterprise: { id: "null", name: "null" },
       // user scopes + token is null on workspace install
       user: { token: "null", scopes: "null", id: installation.user.id },
+      _userId: _userId,
       tokenType: installation.tokenType,
       isEnterpriseInstall: installation.isEnterpriseInstall,
       appId: installation.appId,

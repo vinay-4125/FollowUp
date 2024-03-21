@@ -1,5 +1,5 @@
-const { agenda } = require("../lib/agenda");
 const { Reminder } = require("../models/reminderModel");
+const { agenda, getUserIdForSlack } = require("../lib/agenda.js");
 const User = require("../models/userModel");
 const ArrayReminder = require("../models/arrayReminderModel");
 const manifest = require("../manifest.json");
@@ -92,11 +92,29 @@ module.exports.reminder = async (req, res) => {
   }
 };
 
-module.exports.addSlackButton = (req, res) => {
-  const oauthRedirect = manifest.oauth_config.redirect_urls[0];
-  const botScopes = manifest.oauth_config.scopes.bot;
-  res.redirect(
-    303,
-    `https://3db5-49-36-91-22.ngrok-free.app/slack/install/workspace`
-  );
+module.exports.findUpcomingEvents = async (req, res) => {
+  const { userId } = req.params;
+  const currentDate = new Date();
+  const isoDateString = currentDate.toISOString();
+  const datePart = isoDateString.split("T")[0];
+  const hours = currentDate.getHours();
+  const minutes = currentDate.getMinutes();
+  const time = `${hours}:${minutes}`;
+  try {
+    const result = await Reminder.find({
+      _userId: userId,
+      $or: [
+        { date: { $gt: datePart } },
+        {
+          date: { $gte: datePart },
+          time: { $gte: time },
+        },
+      ],
+    });
+
+    res.status(200).json({ result });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
 };

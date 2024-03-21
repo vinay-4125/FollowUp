@@ -2,9 +2,27 @@ import { cn } from "@/lib/utils";
 import DashboardNav from "./DashboardNav";
 import menuItems from "./menuItems";
 import { useMemo } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import UpcomingReminders from "./UpcomingReminder";
+import { useQuery } from "@tanstack/react-query";
 
 const DashboardSidebar = () => {
   const items = useMemo(() => menuItems, []);
+
+  const { user } = useSelector((state) => state.user);
+
+  const fetchUpcomingReminder = async () => {
+    const res = await axios.get(`/api/upcomingreminder/${user._id}`);
+    return res.data.result;
+  };
+
+  const { data } = useQuery({
+    queryKey: ["fetchUpcomingReminder"],
+    queryFn: fetchUpcomingReminder,
+    staleTime: 1000 * 10,
+  });
+
   return (
     <div className="">
       <nav
@@ -17,6 +35,12 @@ const DashboardSidebar = () => {
                 Overview
               </h2>
               <DashboardNav items={items} />
+            </div>
+            <div>
+              {/* <p>Upcoming Events</p> */}
+              <div className="bg-slate-100 dark:bg-slate-800 h-[30rem] mt-10 rounded-md ">
+                <UpcomingReminders reminders={data} />
+              </div>
             </div>
           </div>
         </div>

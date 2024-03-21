@@ -1,10 +1,17 @@
 import { Outlet } from "react-router-dom";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardHeader from "./DashboardHeader";
-import DashboardBody from "./DashboardBody";
+import { useEffect } from "react";
+import { io } from "socket.io-client";
+import { Toaster, toast } from "sonner";
 
 const Dashboard = () => {
-
+  useEffect(() => {
+    const socket = io("http://localhost:8000/");
+    socket.on("emailSent", (data) => toast.success(data.message));
+    // socket.on("whatsappSent", (data) => toast.success(data.message));
+    return () => socket.disconnect();
+  },   []);
   return (
     <>
       <DashboardHeader />
@@ -16,6 +23,7 @@ const Dashboard = () => {
         <main className="w-full pt-14 overflow-y-auto lg:ml-72 md:overflow-hidden">
           <Outlet />
         </main>
+        <Toaster richColors position="bottom-left" />
       </div>
     </>
   );

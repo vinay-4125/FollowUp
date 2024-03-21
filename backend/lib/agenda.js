@@ -7,6 +7,8 @@ const workspaceAuth = require("../models/slackdb/store_user_workspace_install");
 const { App, LogLevel } = require("@slack/bolt");
 const { registerListeners } = require("./listeners");
 const manifest = require("../manifest.json");
+const { _userId } = require("../controllers/userController");
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   host: "smtp.gmail.com",
@@ -48,6 +50,11 @@ const customRoutes = [
     },
   },
 ];
+let userId = "";
+const getUserId = (req, res) => {
+  const { _userId } = req.body;
+  userId = _userId;
+};
 
 const slackapp = new App({
   // token: process.env.SLACK_BOT_TOKEN,
@@ -65,14 +72,23 @@ const slackapp = new App({
     storeInstallation: async (installation) => {
       console.log("installation: ");
       console.log(installation);
+      console.log("USERSERSERIDID", userId);
+
       if (
         installation.isEnterpriseInstall &&
         installation.enterprise !== undefined
       ) {
-        return await orgInstall.saveUserOrgInstall(installation);
+        return await orgInstall.saveUserOrgInstall(installation, userId);
       }
       if (installation.team !== undefined) {
-        return await workspaceAuth.saveUserWorkspaceInstall(installation);
+        await User.findByIdAndUpdate(
+          { _id: userId },
+          { slackId: installation.user.id }
+        );
+        return await workspaceAuth.saveUserWorkspaceInstall(
+          installation,
+          userId
+        );
       }
       throw new Error("Failed saving installation data to installationStore");
     },
@@ -93,84 +109,71 @@ const slackapp = new App({
   },
 });
 
-// slackapp.message(async ({ message, client, logger }) => {
-//   try {
-//     const result = await client.chat.postMessage({
-//       channel: "C06NWHESSJF",
-//       text: "def",
-//     });
-//     console.log(result);
-//   } catch (error) {
-//     logger.error(error);
-//   }
-// });
-
-// slackapp.message("hello", async (ack, say) => {
-//   await ack();
-//   await say({
-//     text: "Hi there!",
-//     channel: "C06NTP2LQKF", // Replace with the actual channel ID
-//   });
-// });
-
 registerListeners(slackapp);
 
 const agenda = new Agenda({ db: { address: process.env.MONGODBURL } });
 
-agenda.define("sendReminder", async (job) => {
-  const jobVariable = job.attrs.data.reminder;
-  const user = await User.findById(jobVariable._userId).select(
-    "-profilePicture"
-  );
-  console.log(user);
-
-  //   if (reminder.repeat) {
-  //     if (reminder.repeat === "norepeat") {
-  //       return;
-  //     }
-  //     job.repeatEvery(reminder.repeat);
-  //     await job.save();
-  //   }
-  const mailOptions = {
-    from: {
-      name: "FollowUp.",
-      address: process.env.MYEMAIL,
-    }, // sender address
-    to: jobVariable.listMembers, // list of receivers
-    subject: jobVariable.reminderName, // Subject line
-    text: jobVariable.description, // plain text body
-    // html: "<b>Hello world?</b>", // html body
-  };
-
-  const sendMail = async (transporter, mailOptions) => {
-    try {
-      await transporter.sendMail(mailOptions);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  if (jobVariable.notification.includes("Email")) {
-    sendMail(transporter, mailOptions);
-    console.log(
-      `Sending reminder to ${jobVariable._userId} for ${jobVariable.reminderName}\n Email sent`
+const funcIO = (io) => {
+  agenda.define("sendReminder", async (job) => {
+    const jobVariable = job.attrs.data.reminder;
+    const user = await User.findById(jobVariable._userId).select(
+      "-profilePicture"
     );
-  }
+    // console.log(user);
 
-  if (jobVariable.notification.includes("Whatsapp")) {
-    client.messages
-      .create({
-        from: "whatsapp:+14155238886",
-        body: "Hello there!",
-        to: "whatsapp:+919327097402",
-      })
-      .then((message) => console.log(message.sid));
-  }
+    //   if (reminder.repeat) {
+    //     if (reminder.repeat === "norepeat") {
+    //       return;
+    //     }
+    //     job.repeatEvery(reminder.repeat);
+    //     await job.save();
+    //   }
+    const mailOptions = {
+      from: {
+        name: "FollowUp.",
+        address: process.env.MYEMAIL,
+      }, // sender address
+      to: jobVariable.listMembers, // list of receivers
+      subject: jobVariable.reminderName, // Subject line
+      text: jobVariable.description, // plain text body
+      // html: "<b>Hello world?</b>", // html body
+    };
 
-  if (jobVariable.notification.includes("Slack")) {
-    console.log(`Sending msg to slack`);
-  }
-});
+    const sendMail = async (transporter, mailOptions) => {
+      try {
+        await transporter.sendMail(mailOptions);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (jobVariable.notification.includes("Email")) {
+      sendMail(transporter, mailOptions);
+      console.log(
+        `Sending reminder to ${jobVariable._userId} for ${jobVariable.reminderName}\n Email sent`
+      );
+      // io.on("connection", (socket) => {
+      // console.log(socket.id);
+      io.emit("emailSent", { message: "Email sent!!!" });
+      // });
+    }
+
+    if (jobVariable.notification.includes("Whatsapp")) {
+      client.messages
+        .create({
+          from: "whatsapp:+14155238886",
+          body: "Hello there!",
+          to: "whatsapp:+919327097402",
+        })
+        .then((message) => console.log(message.sid));
+      io.emit("whatsappSent", { message: "Whatsapp sent!!!" });
+    }
+
+    if (jobVariable.notification.includes("Slack")) {
+      console.log(`Sending msg to slack`);
+    }
+  });
+};
 
 (async () => {
   try {
@@ -187,4 +190,13 @@ module.exports = {
     next();
   },
   agenda,
+  funcIO,
+  getUserId,
 };
+
+// module.exports.funcIO = (io) => {
+//   io.on("connection", (socket) => {
+//     console.log(socket.id);
+//     io.emit("emailSent", { message: "Email sent!!!" });
+//   });
+// };

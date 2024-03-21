@@ -131,6 +131,36 @@ h2 {
   @apply dark:border-[hsl(var(--calborder))] !important;
 }
 
+.rbc-month-view {
+  @apply rounded-md;
+}
+
+.rbc-month-row {
+  @apply z-0 !important;
+}
+.rbc-row-bg {
+  @apply z-0 !important;
+}
+.rbc-row-content {
+  @apply z-0 !important;
+}
+
+.rbc-day-bg {
+  @apply z-0 !important;
+}
+
+.rbc-overlay-header {
+  @apply dark:text-black;
+}
+
+.rbc-off-range-bg {
+  @apply dark:bg-slate-800;
+}
+
+.rbc-time-slot {
+  @apply z-[100] !important;
+}
+
 /* .rbc-month-view {
   @apply overflow-y-auto;
 } */
@@ -165,5 +195,3 @@ h1 {
 h2 {
   @apply scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0;
 }
-
-

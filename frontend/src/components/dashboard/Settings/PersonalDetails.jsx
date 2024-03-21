@@ -130,7 +130,11 @@ const PersonalDetails = ({ user }) => {
                     SlackId
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="slackId" {...field} />
+                    <Input
+                      placeholder="slackId"
+                      {...field}
+                      readonly="readonly"
+                    />
                   </FormControl>
                   <FormMessage className="flex justify-start items-center " />
                 </FormItem>

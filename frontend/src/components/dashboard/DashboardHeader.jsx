@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { MobileSidebar } from "./MobileSidebar";
 import ThemeToggle from "../ThemeToggle";
-import EventFormOne from "./EventFormOne";
 import UserNav from "./UserNav";
 import EventFormTwo from "./EventFormTwo";
 
