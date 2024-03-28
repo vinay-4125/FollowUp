@@ -68,10 +68,14 @@ module.exports.updateMember = async (req, res) => {
 };
 
 module.exports.deleteMember = async (req, res) => {
-  const { _id } = req.query;
+  const { _id, userId } = req.query;
   try {
     const deletedMember = await Member.findByIdAndDelete({ _id });
-    if (!deletedMember) {
+    const deleteMemberFromUser = await User.findByIdAndUpdate(
+      { _id: userId },
+      { $pull: { members: _id } }
+    );
+    if (!deletedMember || !deleteMemberFromUser) {
       res.status(400).json({ message: "Internal server error" });
     }
     res.status(200).json({ message: "Member deleted" });

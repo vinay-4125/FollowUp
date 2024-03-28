@@ -11,7 +11,7 @@ const Dashboard = () => {
     socket.on("emailSent", (data) => toast.success(data.message));
     // socket.on("whatsappSent", (data) => toast.success(data.message));
     return () => socket.disconnect();
-  },   []);
+  }, []);
   return (
     <>
       <DashboardHeader />
@@ -20,7 +20,7 @@ const Dashboard = () => {
         <div className="fixed">
           <DashboardSidebar />
         </div>
-        <main className="w-full pt-14 overflow-y-auto lg:ml-72 md:overflow-hidden">
+        <main className="w-full pt-14 lg:ml-72 overflow-hidden">
           <Outlet />
         </main>
         <Toaster richColors position="bottom-left" />

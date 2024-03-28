@@ -22,6 +22,11 @@ import ProtectedRoute from "./components/ProtectedRoutes.jsx";
 import { io } from "socket.io-client";
 import { useEffect } from "react";
 import PublicRouteLogin from "./components/PublicRouteLogin.jsx";
+import UpdateReminder from "./components/dashboard/ReminderList/UpdateReminder.jsx";
+import SuperAdminLogin from "./components/dashboard/SuperAdmin/SuperAdminLogin.jsx";
+import SuperAdminDashboard from "./components/dashboard/SuperAdmin/SuperAdminDashboard.jsx";
+import SuperAdminDashboardBody from "./components/dashboard/SuperAdmin/Dashboard/SuperAdminDashboardBody.jsx";
+import SuperAdminSettings from "./components/dashboard/SuperAdmin/Dashboard/SuperAdminSettings.jsx";
 
 // const ProtectedRoute = ({ path, element }) => {
 //   const { user } = useAuthContext();
@@ -50,10 +55,19 @@ const router = createBrowserRouter(
           <Route index element={<DashboardBody />} />
           <Route path="addmember" element={<AddMember />} />
           <Route path="addmember/new" element={<AddMemberForm />} />
-          <Route path="update/:id" element={<UpdateMember />} />
+          <Route path="member/update/:id" element={<UpdateMember />} />
           <Route path="reminderlist" element={<ReminderList />} />
+          <Route path="reminder/update/:id" element={<UpdateReminder />} />
           <Route path="settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
+        </Route>
+      </Route>
+
+      <Route path="/superadmin">
+        <Route path="login" element={<SuperAdminLogin />} />
+        <Route path="dashboard" element={<SuperAdminDashboard />}>
+          <Route index element={<SuperAdminDashboardBody />} />
+          <Route path="settings" element={<SuperAdminSettings />} />
         </Route>
       </Route>
 

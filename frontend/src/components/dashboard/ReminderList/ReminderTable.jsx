@@ -61,6 +61,16 @@ const ReminderTable = ({ data, columns }) => {
     onGlobalFilterChange: setFiltering,
   });
 
+  const [hoveredRowId, setHoveredRowId] = useState(null);
+
+  const handleMouseEnter = (rowId) => {
+    setHoveredRowId(rowId);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredRowId(null);
+  };
+
   return (
     <>
       <div className="flex items-center py-4">
@@ -126,6 +136,16 @@ const ReminderTable = ({ data, columns }) => {
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
+                  style={{
+                    backgroundColor:
+                      row.id === hoveredRowId
+                        ? row.original.backgroundColor
+                        : null,
+                    transition: "background-color 0.4s ease-in-out",
+                  }}
+                  onMouseEnter={() => handleMouseEnter(row.id)}
+                  onMouseLeave={handleMouseLeave}
+                  // className={`hover:bg-[${row.original.backgroundColor}]`}
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (

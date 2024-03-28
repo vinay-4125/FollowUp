@@ -145,9 +145,9 @@ const PersonalDetails = ({ user }) => {
           <Button type="submit">Update</Button>
         </form>
       </Form>
-      {/* <div className="mt-5">
+      <div className="mt-5">
         <pre>{JSON.stringify(form.watch(), null, 2)}</pre>
-      </div> */}
+      </div>
       <Toaster position="bottom-left" />
     </>
   );

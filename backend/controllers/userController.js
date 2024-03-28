@@ -126,7 +126,8 @@ module.exports.forgetPassword = async (req, res) => {
 module.exports.resetPassword = async (req, res) => {
   const { id } = req.params;
   const { password } = req.body;
-  const token = req.cookies.jwt;
+  // const token = req.cookies.jwt;
+  const token = createToken(id)
   jwt.verify(token, process.env.SECRET, async (err, decode) => {
     if (err) {
       return res.status(400).json({ message: "Invalid token" });
@@ -337,8 +338,6 @@ module.exports.updateUserSlackId = (req, res) => {
   console.log(slackId);
 };
 
-
-
 // module.exports.sendUserId = (req, res) => {
 //   const { _userId } = req.body;
 //   userId = _userId;
@@ -349,4 +348,3 @@ module.exports.updateUserSlackId = (req, res) => {
 //     res.status(400).json({ error });
 //   }
 // };
-

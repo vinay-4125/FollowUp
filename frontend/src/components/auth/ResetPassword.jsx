@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
+import { useSelector } from "react-redux";
 
 const ResetPassword = () => {
   const { id } = useParams();
@@ -11,7 +12,10 @@ const ResetPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`/api/auth/reset-password/${id}`, { password });
+      const res = await axios.post(`/api/auth/reset-password/${id}`, {
+        password,
+      });
+      console.log(res);
       navigate("/login");
     } catch (err) {
       console.log(err);
@@ -91,7 +95,7 @@ const ResetPassword = () => {
             </div>
           </div>
         </div>
-        <Toaster position="bottom-left"/>
+        <Toaster position="bottom-left" />
       </section>
     </>
   );

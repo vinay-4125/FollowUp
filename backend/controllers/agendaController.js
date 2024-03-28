@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const ArrayReminder = require("../models/arrayReminderModel");
 const io = require("../index.js");
+const { Reminder } = require("../models/reminderModel.js");
 
 module.exports.allReminders = async (req, res) => {
   try {
@@ -67,5 +68,23 @@ module.exports.allRemindersById = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(400).json({ err });
+  }
+};
+
+module.exports.deleteReminderById = async (req, res) => {
+  const { _id, userId } = req.query;
+  try {
+    const reminderDelete = await Reminder.findByIdAndDelete({ _id });
+    const arrayReminderDelete = await ArrayReminder.findOneAndUpdate(
+      {
+        userId,
+      },
+      { $pull: { reminders: { _id } } }
+    );
+
+    res.status(200).json({ message: "Reminder Deleted" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
   }
 };

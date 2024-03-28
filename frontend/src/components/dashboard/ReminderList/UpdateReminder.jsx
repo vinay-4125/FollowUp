@@ -1,15 +1,7 @@
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
-import { Plus, PlusIcon } from "lucide-react";
-import { Button } from "../ui/button";
+import { Heading } from "@/components/ui/heading";
+import BreadCrumb from "../Breadcrumb";
+import { Separator } from "@/components/ui/separator";
 import {
   Form,
   FormControl,
@@ -17,23 +9,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import makeAnimated from "react-select/animated";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "../ui/select";
-import { Toaster, toast } from "sonner";
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 import Select from "react-select";
+import makeAnimated from "react-select/animated";
 import {
   Select as ShadSelect,
   SelectContent,
@@ -41,10 +25,24 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../../ui/select";
+import { toast } from "sonner";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { useNavigate } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { PlusIcon } from "lucide-react";
+
+const breadcrumbItems = [
+  { title: "Reminder", link: "/dashboard/reminderlist" },
+  { title: "Update", link: "/dashboard/reminder/update" },
+];
 
 const formSchema = yup.object({
   reminderName: yup.string().required(),
@@ -60,16 +58,27 @@ const formSchema = yup.object({
   color: yup.string().required(),
 });
 
-const EventFormTwo = () => {
-  const animatedComponents = makeAnimated();
-  const [open, setOpen] = useState(false);
+const UpdateReminder = () => {
+  const { state } = useLocation();
+  const { id } = useParams();
 
+  const animatedComponents = makeAnimated();
   const queryClient = useQueryClient();
   queryClient.invalidateQueries({
     queryKey: ["getMembers"],
     refetchType: "active",
   });
 
+  const fetchReminderData = async () => {
+    const res = await axios.get(`/api/getReminderDataById/${id}`);
+    return res.data.result;
+  };
+
+  const { data: formData } = useQuery({
+    queryKey: ["getReminderById"],
+    queryFn: fetchReminderData,
+  });
+  // console.log("STATE", formData);
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
   const fetchMembers = async () => {
@@ -93,7 +102,6 @@ const EventFormTwo = () => {
     queryFn: fetchMembers,
     // staleTime: 1000 * 10,
   });
-
   let colors = [
     "#FF5733",
     "#FFD700",
@@ -112,7 +120,6 @@ const EventFormTwo = () => {
     "#e879f9",
     "#fb7185",
   ];
-
   const repeatData = [
     { label: "Does not repeat", value: "norepeat" },
     { label: "Daily", value: "daily" },
@@ -148,51 +155,37 @@ const EventFormTwo = () => {
         return field;
       }
     });
-
-  const handleMissingFields = () => {
-    navigate("/dashboard/settings");
-    setOpen(false);
-  };
-
-  const [members, setMembers] = useState([]);
-  const [selectedOption, setSelectedOption] = useState(null);
-
-  useEffect(() => setMembers(membersName), [membersName]);
-  
   const form = useForm({
-    defaultValues: {
-      reminderName: "",
-      date: "",
-      time: "",
-      description: "",
-      listMembers: [],
-      notification: [],
-      repeat: "",
-      color: "",
-    },
+    defaultValues: async () =>
+      await axios
+        .get(`/api/getReminderDataById/${id}`)
+        .then((res) => res.data.result),
+
     mode: "all",
     resolver: yupResolver(formSchema),
   });
+
+  const handleMissingFields = () => {
+    navigate("/dashboard/settings");
+  };
+
+  const [members, setMembers] = useState([]);
+  const [selectedOption, setSelectedOption] = useState();
+
+  useEffect(() => setMembers(membersName), [membersName]);
 
   const handleMemberListChange = (data) => {
     const valueData = data.map((item) => item.value);
     setSelectedOption(valueData);
     form.setValue("listMembers", valueData);
   };
-
   const onSubmit = async (data) => {
     try {
       data.userId = user._id;
-      console.log(data);
-      const res = await axios.post("/api/reminder", data);
-      console.log("EVENTTWOFORM", res);
-      toast("Event has been created", {
-        description: res.data.message,
-        action: {
-          label: "Undo",
-          onClick: () => console.log("Undo"), //! To implement undo function to undo the event.
-        },
-      });
+      data.id = id;
+      // console.log(data);
+      const res = await axios.put("/api/updatereminder", data);
+      console.log("UPDATEREMINDER", res);
       await queryClient.invalidateQueries({
         queryKey: ["fetchUpcomingReminder"],
         refetchType: "active",
@@ -201,6 +194,7 @@ const EventFormTwo = () => {
         queryKey: ["getAllReminders"],
         refetchType: "active",
       });
+      navigate('/dashboard/reminderlist')
       form.reset();
     } catch (error) {
       console.log(error);
@@ -209,19 +203,14 @@ const EventFormTwo = () => {
   };
 
   return (
-    <div>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger>
-          <Button>
-            <Plus />
-            Create Reminder
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="text-2xl">Create Reminder</DialogTitle>
-          </DialogHeader>
-
+    <>
+      {formData && (
+        <div className="flex-1 max-h-full overflow-auto space-y-4 p-4 md:p-8 pt-6">
+          <BreadCrumb items={breadcrumbItems} />
+          <div className="flex items-start justify-between">
+            <Heading title={`Update Reminder`} />
+          </div>
+          <Separator />
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="mt-2 mb-4 grid grid-cols-3 gap-4">
@@ -363,7 +352,8 @@ const EventFormTwo = () => {
                           </FormLabel>
                           <FormControl>
                             <Select
-                              defaultValue={selectedOption}
+                              // defaultValue={state.listMembers}
+                              // value={state.listMembers}
                               onChange={(data) => handleMemberListChange(data)}
                               options={members}
                               isMulti={true}
@@ -400,7 +390,7 @@ const EventFormTwo = () => {
                         <FormLabel className="flex justify-start items-center">
                           Notification
                         </FormLabel>
-                        <FormControl>
+                        <FormControl className="flex justify-start px-4">
                           <ToggleGroup
                             variant="outline"
                             type="multiple"
@@ -470,37 +460,17 @@ const EventFormTwo = () => {
                   />
                 </div>
               </div>
-              <div className="flex justify-end gap-5">
-                <Button
-                  variant="outline"
-                  key={"cancel"}
-                  type="button"
-                  onClick={() => {
-                    setOpen(false);
-                    form.reset();
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  onClick={() => {
-                    setOpen(false);
-                  }}
-                >
-                  Save
-                </Button>
-              </div>
-              {/* <div>
+              <Button type="submit">Update</Button>
+
+              <div className="mt-5">
                 <pre>{JSON.stringify(form.watch(), null, 2)}</pre>
-              </div> */}
+              </div>
             </form>
           </Form>
-        </DialogContent>
-      </Dialog>
-      <Toaster position="bottom-left" />
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 
-export default EventFormTwo;
+export default UpdateReminder;

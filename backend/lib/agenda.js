@@ -128,6 +128,7 @@ const funcIO = (io) => {
     //     job.repeatEvery(reminder.repeat);
     //     await job.save();
     //   }
+    // const reminderExists = await Reminder.findById(jobVariable._id);
     const mailOptions = {
       from: {
         name: "FollowUp.",
@@ -146,7 +147,7 @@ const funcIO = (io) => {
         console.log(error);
       }
     };
-
+    // if (reminderExists) {
     if (jobVariable.notification.includes("Email")) {
       sendMail(transporter, mailOptions);
       console.log(
@@ -162,7 +163,7 @@ const funcIO = (io) => {
       client.messages
         .create({
           from: "whatsapp:+14155238886",
-          body: "Hello there!",
+          body: "Hello there!!!",
           to: "whatsapp:+919327097402",
         })
         .then((message) => console.log(message.sid));
@@ -172,6 +173,10 @@ const funcIO = (io) => {
     if (jobVariable.notification.includes("Slack")) {
       console.log(`Sending msg to slack`);
     }
+    // } else {
+    //   console.log(`Reminder with ID ${reminderId} not found. Cancelling job.`);
+    //   await job.remove();
+    // }
   });
 };
 

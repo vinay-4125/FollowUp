@@ -20,7 +20,7 @@ import { Toaster, toast } from "sonner";
 import axios from "axios";
 const breadcrumbItems = [
   { title: "Member", link: "/dashboard/addmember" },
-  { title: "Update", link: "/dashboard/addmember/update" },
+  { title: "Update", link: "/dashboard/member/update" },
 ];
 
 const formSchema = yup.object({

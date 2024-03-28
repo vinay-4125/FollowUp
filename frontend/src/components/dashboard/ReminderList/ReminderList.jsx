@@ -8,7 +8,7 @@ import axios from "axios";
 import ListMembers from "./ListMembers";
 import NotificationBadge from "./NotificationBadge";
 import ReminderDescription from "./ReminderDescription";
-import MemberAction from "../AddMember/MemberAction";
+import ReminderAction from "./ReminderAction";
 
 const breadcrumbItems = [
   { title: "ReminderList", link: "/dashboard/reminderlist" },
@@ -19,6 +19,7 @@ const ReminderList = () => {
   const fetchMembers = async () => {
     const res = await axios.get(`/api/allRemindersById/${user._id}`);
     const reminders = res.data.allData.reminders.map((reminder) => ({
+      _id: reminder._id,
       title: reminder.reminderName,
       backgroundColor: reminder.color,
       start: new Date(`${reminder.date} ${reminder.time}`),
@@ -28,8 +29,9 @@ const ReminderList = () => {
       time: reminder.time,
       notification: reminder.notification,
       listMembers: reminder.listMembers,
+      repeat: reminder.repeat,
     }));
-    return reminders;
+    return reminders.reverse();
   };
   const { data: reminders } = useQuery({
     queryKey: ["getAllReminders"],
@@ -44,7 +46,7 @@ const ReminderList = () => {
     {
       header: "Reminder Description",
       accessorKey: "description",
-      size:100,
+      size: 100,
       cell: ({ row }) => (
         <ReminderDescription data={row.original.description} />
       ),
@@ -71,7 +73,7 @@ const ReminderList = () => {
       id: "actions",
       enableHiding: false,
       header: "Actions",
-      cell: ({ row }) => <MemberAction data={row.original} />,
+      cell: ({ row }) => <ReminderAction data={row.original} />,
     },
   ];
 

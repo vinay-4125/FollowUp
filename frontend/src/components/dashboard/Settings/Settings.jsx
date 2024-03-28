@@ -40,7 +40,8 @@ const Settings = () => {
   ];
   return (
     <>
-      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+      {/* <div className="flex-1 max-h-full overflow-auto space-y-4 p-4 md:p-8 pt-6"> */}
+      <div className="flex-1 max-h-full overflow-x-hidden space-y-4 p-4 md:p-8 pt-6">
         <BreadCrumb items={breadcrumbItems} />
 
         <div>
@@ -48,7 +49,7 @@ const Settings = () => {
         </div>
         <Separator />
 
-        <Tabs defaultValue="Personal Details" className="h-screen">
+        <Tabs defaultValue="Personal Details">
           <TabsList className="mb-5 text-sm sm:text-base flex-wrap h-fit">
             {tabValue.map((item, id) => (
               <TabsTrigger key={id} value={item.value} className="text-md h-10">
@@ -56,7 +57,7 @@ const Settings = () => {
               </TabsTrigger>
             ))}
           </TabsList>
-          <div className="min-h-full">
+          <div className="">
             <TabsContent value="Personal Details">
               {user && (
                 <>

@@ -2,7 +2,7 @@ import ReminderListCal from "./EventList/ReminderListCal";
 
 const DashboardMainBody = () => {
   return (
-    <div className="h-screen mt-5 pb-16 overflow-hidden">
+    <div className="mt-5">
       <ReminderListCal />
     </div>
   );

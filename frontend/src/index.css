@@ -139,7 +139,7 @@ h2 {
   @apply z-0 !important;
 }
 .rbc-row-bg {
-  @apply z-0 !important;
+  @apply z-0  !important;
 }
 .rbc-row-content {
   @apply z-0 !important;

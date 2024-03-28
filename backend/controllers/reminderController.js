@@ -2,7 +2,6 @@ const { Reminder } = require("../models/reminderModel");
 const { agenda, getUserIdForSlack } = require("../lib/agenda.js");
 const User = require("../models/userModel");
 const ArrayReminder = require("../models/arrayReminderModel");
-const manifest = require("../manifest.json");
 
 module.exports.reminder = async (req, res) => {
   try {
@@ -118,3 +117,86 @@ module.exports.findUpcomingEvents = async (req, res) => {
     res.status(400).json({ error });
   }
 };
+
+module.exports.findReminderById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await Reminder.findById(id);
+    res.status(200).json({ result });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};
+
+module.exports.deleteReminderById = async (req, res) => {
+  const { _id, userId } = req.query;
+  try {
+    const reminderDelete = await Reminder.findByIdAndDelete({ _id });
+    const arrayReminderDelete = await ArrayReminder.findOneAndUpdate(
+      {
+        userId,
+      },
+      { $pull: { reminders: { _id } } }
+    );
+
+    res.status(200).json({ message: "Reminder Deleted" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};
+
+module.exports.updateReminder = async (req, res) => {
+  const {
+    notification,
+    listMembers,
+    repeat,
+    description,
+    time,
+    date,
+    reminderName,
+    color,
+    id,
+    userId,
+  } = req.body;
+  try {
+    const result = await Reminder.findByIdAndUpdate(
+      { _id: id },
+      {
+        notification,
+        listMembers,
+        repeat,
+        description,
+        time,
+        date,
+        reminderName,
+        color,
+        _userId: userId,
+      }
+    );
+    const arrayReminderResult = await ArrayReminder.updateOne(
+      { "reminders._id": id },
+      {
+        $set: {
+          "reminders.$[elem].notification": notification,
+          "reminders.$[elem].listMembers": listMembers,
+          "reminders.$[elem].repeat": repeat,
+          "reminders.$[elem].description": description,
+          "reminders.$[elem].time": time,
+          "reminders.$[elem].date": date,
+          "reminders.$[elem].reminderName": reminderName,
+          "reminders.$[elem].color": color,
+        },
+      },
+      { arrayFilters: [{ "elem._id": id }] }
+    );
+    if (result && arrayReminderResult) {
+      res.status(200).json({ message: "Reminder Updated!!" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};
+

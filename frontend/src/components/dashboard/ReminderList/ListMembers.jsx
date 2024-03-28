@@ -1,5 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -9,6 +16,7 @@ import React from "react";
 
 const ListMembers = ({ data }) => {
   const visibleData = data && data.slice(0, 4);
+  const hiddenUsers = data && data.slice(4);
   return (
     // <TooltipProvider>
     //   <Tooltip>
@@ -57,13 +65,26 @@ const ListMembers = ({ data }) => {
             </TooltipProvider>
           </div>
         ))}
-      {data && data.length > 4 && (
-        <div className="h-10 w-10 text-white bg-black z-10 -space-x-2.5 rounded-full">
-          <p className="flex justify-center h-full items-center">
-            +{data.length - 5}
-          </p>
-        </div>
-      )}
+      <HoverCard>
+        <HoverCardTrigger>
+          {data && data.length > 4 && (
+            <div className="h-10 w-10 text-white bg-black z-10 border dark:border-slate-600 -space-x-2.5 rounded-full">
+              <p className="flex justify-center h-full items-center cursor-default">
+                +{data.length - 5}
+              </p>
+            </div>
+          )}
+        </HoverCardTrigger>
+        <HoverCardContent>
+          {data &&
+            hiddenUsers.map((item, index) => (
+              <ScrollArea key={index}>
+                <span>{item}</span>
+                <Separator className="my-2" />
+              </ScrollArea>
+            ))}
+        </HoverCardContent>
+      </HoverCard>
     </div>
   );
 };

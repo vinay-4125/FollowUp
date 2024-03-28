@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -22,21 +23,38 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Toaster } from "@/components/ui/sonner";
 import axios from "axios";
-import { useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 
-const MemberAction = ({ data }) => {
+const ReminderAction = ({ data }) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { user } = useSelector((state) => state.user);
   const queryClient = useQueryClient();
 
-  const handleDeleteMember = async (data) => {
+  const fetchUpcomingReminder = async () => {
+    const res = await axios.get(`/api/upcomingreminder/${user._id}`);
+    return res.data.result;
+  };
+
+  const { data: upcomingReminder } = useQuery({
+    queryKey: ["fetchUpcomingReminder"],
+    queryFn: fetchUpcomingReminder,
+    staleTime: 1000 * 10,
+  });
+
+  // console.log("upcomingReminderfromupdate", upcomingReminder);
+
+  const handleDeleteMember = async (data) => {  
     try {
-      const res = await axios.delete("/api/deletemember", {
+      const res = await axios.delete("/api/deletereminder", {
         params: { _id: data._id, userId: user._id },
       });
       await queryClient.invalidateQueries({
-        queryKey: ["getMembers"],
+        queryKey: ["getAllReminders"],
+        refetchType: "active",
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["fetchUpcomingReminder"],
         refetchType: "active",
       });
     } catch (error) {
@@ -46,6 +64,12 @@ const MemberAction = ({ data }) => {
 
   return (
     <>
+      {/* <AlertModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={(data) => onConfirm(data)}
+        loading={loading}
+      /> */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -56,11 +80,14 @@ const MemberAction = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          <Link to={`/dashboard/member/update/${data._id}`} state={data}>
-            <DropdownMenuItem className="my-1">
-              <Edit className="mr-2 h-4 w-4" /> Update
-            </DropdownMenuItem>
-          </Link>
+          {upcomingReminder &&
+            upcomingReminder.some((reminder) => reminder._id === data._id) && (
+              <Link to={`/dashboard/reminder/update/${data._id}`} state={data}>
+                <DropdownMenuItem className="my-1">
+                  <Edit className="mr-2 h-4 w-4" /> Update
+                </DropdownMenuItem>
+              </Link>
+            )}
           <DropdownMenuItem
             className="bg-destructive hover:shadow-sm text-white"
             onSelect={() => setShowDeleteDialog(true)}
@@ -75,7 +102,8 @@ const MemberAction = ({ data }) => {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete member.
+              This action cannot be undone. This will permanently delete these
+              reminder.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -94,27 +122,4 @@ const MemberAction = ({ data }) => {
   );
 };
 
-export default MemberAction;
-
-{
-  /* <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="flex gap-2">
-                <Edit className="h-4 w-4" />
-                Update
-              </DropdownMenuItem>
-              <DropdownMenuItem className="flex gap-2 bg-destructive text-white">
-                <Trash className="h-4 w-4" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu> */
-}
+export default ReminderAction;

@@ -24,6 +24,7 @@ const ReminderListCal = () => {
       date: reminder.date,
       time: reminder.time,
       notification: reminder.notification,
+      repeat: reminder.repeat,
     }));
     // const reminders = res.data.allData.map((event) => ({
     //   title: event.data.reminder.reminderName,
@@ -40,7 +41,6 @@ const ReminderListCal = () => {
     queryKey: ["getAllReminders"],
     queryFn: fetchMembers,
   });
-
   const buildMessage = (calEvent, eventType) => {
     return `Event ${eventType}: ${calEvent.title} at ${calEvent.start}`;
   };
@@ -75,7 +75,7 @@ const ReminderListCal = () => {
 
     return (
       // <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-      <div className="flex flex-col justify-between items-center gap-5 mb-5 sm:gap-0 sm:flex-row">
+      <div className="flex  flex-col justify-between items-center gap-5 mb-5 sm:gap-0 sm:flex-row">
         <span className="rbc-btn-group">
           <Button variant="outline" onClick={goToBack}>
             Back

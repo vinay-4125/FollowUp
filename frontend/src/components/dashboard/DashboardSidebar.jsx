@@ -24,7 +24,7 @@ const DashboardSidebar = () => {
   });
 
   return (
-    <div className="">
+    <>
       <nav
         className={cn(`relative hidden h-screen border-r pt-16 lg:block w-72`)}
       >
@@ -45,7 +45,7 @@ const DashboardSidebar = () => {
           </div>
         </div>
       </nav>
-    </div>
+    </>
   );
 };
 

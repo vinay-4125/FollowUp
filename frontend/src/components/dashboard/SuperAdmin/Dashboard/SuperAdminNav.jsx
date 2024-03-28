@@ -1,14 +1,13 @@
+import { Icons } from "@/components/Icon";
 import { cn } from "@/lib/utils";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Icons } from "../Icon";
-// import { Icons } from "../Icon";
 
-const DashboardNav = ({ items, setOpen }) => {
+const SuperAdminNav = ({ items }) => {
   const location = useLocation();
   if (!items?.length) {
     return null;
   }
-
   return (
     <nav className="grid items-start gap-2">
       {items.map((item, index) => {
@@ -34,4 +33,4 @@ const DashboardNav = ({ items, setOpen }) => {
   );
 };
 
-export default DashboardNav;
+export default SuperAdminNav;
