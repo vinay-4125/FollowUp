@@ -105,8 +105,8 @@ module.exports.findUpcomingEvents = async (req, res) => {
       $or: [
         { date: { $gt: datePart } },
         {
-          date: { $gte: datePart },
-          time: { $gte: time },
+          date: datePart, 
+          time: { $gte: time }, 
         },
       ],
     });
@@ -199,4 +199,3 @@ module.exports.updateReminder = async (req, res) => {
     res.status(400).json({ error });
   }
 };
-

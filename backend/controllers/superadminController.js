@@ -1,9 +1,19 @@
+const { default: mongoose } = require("mongoose");
 const { Reminder } = require("../models/reminderModel");
 const User = require("../models/userModel");
 
 module.exports.getTotalNumberOfReminder = async (req, res) => {
+  const { fromDate, toDate } = req.query;
+  const convertFromDate = new Date(fromDate).toISOString();
+  const convertToDate = new Date(toDate).toISOString();
+  // console.log(convertFromDate, convertToDate);
   try {
-    const result = await Reminder.countDocuments();
+    const result = await Reminder.countDocuments({
+      date: {
+        $gte: convertFromDate,
+        $lt: convertToDate,
+      },
+    });
     res.status(200).json({ result });
   } catch (error) {
     console.log(error);
@@ -22,9 +32,10 @@ module.exports.getTotalNumberOfUser = async (req, res) => {
 };
 
 module.exports.getNumberOfDailyRemindersCreated = async (req, res) => {
+  const { fromDate, toDate } = req.query;
+  const startDate = new Date(fromDate);
+  const endDate = new Date(toDate);
   try {
-    const startDate = new Date("2024-01-01");
-    const endDate = new Date();
     const result = await Reminder.aggregate([
       {
         $match: {
@@ -51,3 +62,4 @@ module.exports.getNumberOfDailyRemindersCreated = async (req, res) => {
     res.status(400).json({ error });
   }
 };
+

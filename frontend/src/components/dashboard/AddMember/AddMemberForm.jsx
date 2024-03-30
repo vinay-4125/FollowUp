@@ -18,6 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { Toaster, toast } from "sonner";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useQueryClient } from "@tanstack/react-query";
 const breadcrumbItems = [
   { title: "Member", link: "/dashboard/addmember" },
   { title: "Add", link: "/dashboard/addmember/new" },
@@ -33,7 +34,7 @@ const formSchema = yup.object({
 
 const AddMemberForm = () => {
   const { user } = useSelector((state) => state.user);
-
+  const queryClient = useQueryClient();
   const form = useForm({
     defaultValues: {
       firstname: "",
@@ -51,6 +52,9 @@ const AddMemberForm = () => {
     try {
       await axios.post("/api/addmember", finalData);
       toast.success("Member added");
+      queryClient.invalidateQueries({
+        queryKey: ["getMembersForReminderForm"],
+      });
     } catch (error) {
       console.log(error);
       toast.error(error.message);

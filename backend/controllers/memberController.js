@@ -41,8 +41,13 @@ module.exports.getMembers = async (req, res) => {
 };
 
 module.exports.getMemberFullname = async (req, res) => {
+  const { userId } = req.query;
   try {
-    const name = await Member.find().select(["firstname", "lastname", "email"]);
+    const name = await Member.find({ userId }).select([
+      "firstname",
+      "lastname",
+      "email",
+    ]);
     res.status(200).json({ fullname: name });
   } catch (error) {
     console.log(error);

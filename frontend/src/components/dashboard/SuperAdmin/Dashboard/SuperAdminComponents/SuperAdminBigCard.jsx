@@ -17,7 +17,6 @@ const SuperAdminBigCard = ({ items }) => {
       total: item.count,
     };
   });
-  console.log(data);
   return (
     <Card className="col-span-4">
       <CardHeader>

@@ -73,7 +73,9 @@ const EventFormTwo = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
   const fetchMembers = async () => {
-    const res = await axios.get("/api/getMemberFullname");
+    const res = await axios.get("/api/getMemberFullname", {
+      params: { userId: user._id },
+    });
     const { fullname } = res.data;
     // const formattedData = fullname.map((member) => ({
     //   value: `${member.firstname} ${member.lastname}`,
@@ -158,7 +160,7 @@ const EventFormTwo = () => {
   const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => setMembers(membersName), [membersName]);
-  
+
   const form = useForm({
     defaultValues: {
       reminderName: "",

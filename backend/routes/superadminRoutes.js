@@ -11,4 +11,5 @@ routes.get(
   "/getNumberOfDailyRemindersCreated",
   superadminController.getNumberOfDailyRemindersCreated
 );
+
 module.exports = routes;
