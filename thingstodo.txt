@@ -1,2 +1,5 @@
 : to delete member id from user object when member is deleted (DELETE CASCADE)
-: 
+: to remove reminder from agendajs when user deletes or undo the reminders
+: react-select dark-mode styling
+: auth middleware
+: to change memberId as older arrayReminders.data.reminders.listMembers contains email

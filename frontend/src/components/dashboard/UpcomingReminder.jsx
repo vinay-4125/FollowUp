@@ -18,9 +18,8 @@ const UpcomingReminders = ({ reminders }) => {
           {reminders &&
             reminders
               .map((item, index) => (
-                <>
+                <div key={index}>
                   <div
-                    key={index}
                     className="text-sm px-4 rounded-md flex justify-between"
                     // style={{ backgroundColor: item.color }}
                   >
@@ -44,7 +43,7 @@ const UpcomingReminders = ({ reminders }) => {
                     </div>
                   </div>
                   <Separator className="my-2" />
-                </>
+                </div>
               ))
               .reverse()}
         </div>

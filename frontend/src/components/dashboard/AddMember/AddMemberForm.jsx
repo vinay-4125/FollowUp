@@ -15,10 +15,12 @@ import { Input } from "@/components/ui/input";
 import BreadCrumb from "../Breadcrumb";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import { Toaster, toast } from "sonner";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { toast, Toaster } from "sonner";
+
 const breadcrumbItems = [
   { title: "Member", link: "/dashboard/addmember" },
   { title: "Add", link: "/dashboard/addmember/new" },
@@ -28,12 +30,22 @@ const formSchema = yup.object({
   firstname: yup.string().min(1),
   lastname: yup.string().min(1),
   email: yup.string().email(),
-  slackId: yup.string().min(1),
-  phonenumber: yup.string().min(10).max(10),
+  slackId: yup.string(),
+  phonenumber: yup
+    .string()
+    .min(10, "Phone number must be exactly 10 characters")
+    .max(10, "Phone number must be exactly 10 characters")
+    .nullable()
+    .transform((value, originalValue) => {
+      // Transform empty string to null to make it optional
+      return originalValue === "" ? null : originalValue;
+    })
+    .optional(),
 });
 
 const AddMemberForm = () => {
   const { user } = useSelector((state) => state.user);
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const form = useForm({
     defaultValues: {
@@ -55,6 +67,7 @@ const AddMemberForm = () => {
       queryClient.invalidateQueries({
         queryKey: ["getMembersForReminderForm"],
       });
+      navigate("/dashboard/addmember");
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -161,7 +174,7 @@ const AddMemberForm = () => {
           <Button type="submit">Submit</Button>
         </form>
       </Form>
-      <pre>{JSON.stringify(form.watch(), null, 2)}</pre>
+      {/* <pre>{JSON.stringify(form.watch(), null, 2)}</pre> */}
       <Toaster position="bottom-left" />
     </div>
   );

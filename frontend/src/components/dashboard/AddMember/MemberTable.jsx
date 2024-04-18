@@ -107,6 +107,7 @@ const MemberTable = ({ data, columns }) => {
                     key={header.id}
                     onClick={header.column.getToggleSortingHandler()}
                   >
+                    {/* {console.log(header.column.columnDef.header)} */}
                     {header.isPlaceholder ? null : (
                       <div>
                         {flexRender(
@@ -130,10 +131,13 @@ const MemberTable = ({ data, columns }) => {
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {cell.getValue() ||
+                      cell.column.columnDef.header === "Actions"
+                        ? flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )
+                        : "-"}
                     </TableCell>
                   ))}
                 </TableRow>

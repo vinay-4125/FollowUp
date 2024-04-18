@@ -32,7 +32,7 @@ import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 //   SelectTrigger,
 //   SelectValue,
 // } from "../ui/select";
-import { Toaster, toast } from "sonner";
+import { toast, Toaster } from "sonner";
 import Select from "react-select";
 import {
   Select as ShadSelect,
@@ -83,8 +83,8 @@ const EventFormTwo = () => {
     // }));
 
     const formattedData = fullname.map((member) => ({
-      value: `${member.email}`,
-      label: `${member.email}`,
+      value: `${member.firstname}`,
+      label: `${member.firstname}`,
     }));
 
     return formattedData.reverse();
@@ -214,9 +214,12 @@ const EventFormTwo = () => {
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-          <Button>
+          <Button className="hidden sm:flex">
             <Plus />
             Create Reminder
+          </Button>
+          <Button className="sm:hidden">
+            <Plus />
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -289,7 +292,7 @@ const EventFormTwo = () => {
                 </div>
               </div>
 
-              <div className="grid w-full gap-1 5">
+              <div className="grid w-full gap-1">
                 <FormField
                   control={form.control}
                   name="description"
@@ -406,7 +409,7 @@ const EventFormTwo = () => {
                           <ToggleGroup
                             variant="outline"
                             type="multiple"
-                            className="-ml-4 pt-1.5"
+                            className="-ml-2 pt-1.5"
                             onValueChange={field.onChange}
                             defaultValue={field.value}
                           >

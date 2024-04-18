@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import axios from "axios";
-import { Toaster, toast } from "sonner";
+import { toast, Toaster } from "sonner";
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
@@ -11,7 +11,7 @@ const ForgetPassword = () => {
     try {
       await axios.post("/api/auth/forget-password", { email });
       toast.success("Email Sent");
-    //   navigate("/login");
+      //   navigate("/login");
     } catch (err) {
       console.log(err);
     }
@@ -50,7 +50,7 @@ const ForgetPassword = () => {
                   <span className="px-2">Login Page</span>
                 </Link>
               </div>
-              <h1 className="text-xl md:text-2xl font-bold leading-tight mt-12">
+              <h1 className="text-xl md:text-2xl font-bold leading-tight mt-12 dark:text-black">
                 Forget Password
               </h1>
               {/* {error && (
@@ -68,7 +68,7 @@ const ForgetPassword = () => {
                 onSubmit={handleSubmit}
               >
                 <div>
-                  <label className="block text-gray-700">Email Address</label>
+                  <label className="block text-gray-700 ">Email Address</label>
                   <input
                     type="email"
                     placeholder="Enter Email Address"
@@ -82,7 +82,9 @@ const ForgetPassword = () => {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full block text-white font-semibold rounded-lg px-4 py-3 mt-6"
+                  className="w-full p-6 mt-6 dark:bg-black dark:text-white"
+
+                  // className="w-full block text-white font-semibold rounded-lg px-4 py-3 mt-6 dark:bg-black"
                 >
                   Submit
                 </Button>
@@ -90,7 +92,7 @@ const ForgetPassword = () => {
             </div>
           </div>
         </div>
-        <Toaster position="bottom-left" richColors/>
+        <Toaster position="bottom-left" richColors />
       </section>
     </>
   );

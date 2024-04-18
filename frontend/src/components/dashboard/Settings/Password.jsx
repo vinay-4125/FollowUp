@@ -11,7 +11,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { Toaster, toast } from "sonner";
+import { toast, Toaster } from "sonner";
 import axios from "axios";
 
 const formSchema = yup.object({

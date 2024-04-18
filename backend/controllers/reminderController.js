@@ -2,6 +2,7 @@ const { Reminder } = require("../models/reminderModel");
 const { agenda, getUserIdForSlack } = require("../lib/agenda.js");
 const User = require("../models/userModel");
 const ArrayReminder = require("../models/arrayReminderModel");
+const { default: mongoose } = require("mongoose");
 
 module.exports.reminder = async (req, res) => {
   try {
@@ -82,8 +83,11 @@ module.exports.reminder = async (req, res) => {
       reminder,
     });
     console.log("Agenda scheudled for:" + reminder._userId);
+    // res.status(200).json({
+    //   message: `Reminder Set for ${reminderName} at ${date}/${time} `,
+    // });
     res.status(200).json({
-      message: `Reminder Set for ${reminderName} at ${date}/${time} `,
+      reminder,
     });
   } catch (err) {
     console.log(err);
@@ -105,8 +109,8 @@ module.exports.findUpcomingEvents = async (req, res) => {
       $or: [
         { date: { $gt: datePart } },
         {
-          date: datePart, 
-          time: { $gte: time }, 
+          date: datePart,
+          time: { $gte: time },
         },
       ],
     });
@@ -139,6 +143,9 @@ module.exports.deleteReminderById = async (req, res) => {
       },
       { $pull: { reminders: { _id } } }
     );
+    const agendaReminderDelete = await mongoose.connection.db
+      .collection("agendaJobs")
+      .deleteOne({ "data.reminder._id": new mongoose.Types.ObjectId(_id) });
 
     res.status(200).json({ message: "Reminder Deleted" });
   } catch (error) {
@@ -193,6 +200,72 @@ module.exports.updateReminder = async (req, res) => {
     );
     if (result && arrayReminderResult) {
       res.status(200).json({ message: "Reminder Updated!!" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};
+
+// module.exports.getSuccessReminderByUserId = async (req, res) => {
+//   const { userId } = req.query;
+//   try {
+//     const result = await mongoose.connection.db
+//       .collection("agendaJobs")
+//       .aggregate([
+//         {
+//           $match: {
+//             "data.reminder._userId": userId,
+//           },
+//         },
+//         {
+//           $group: {
+//             _id: null,
+//             successCount: {
+//               $sum: { $cond: [{ $eq: ["$failCount", undefined] }, 1, 0] },
+//             },
+//             failCount: {
+//               $sum: { $cond: [{ $ne: ["$failCount", undefined] }, 1, 0] },
+//             },
+//           },
+//         },
+//       ])
+//       .toArray();
+//     console.log(result);
+//     res.status(200).json({ result });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400).json({ error });
+//   }
+// };
+
+module.exports.singleAgendaJobsDeleteDocument = async (req, res) => {
+  const { _id } = req.body;
+  try {
+    const result = await mongoose.connection.db
+      .collection("agendaJobs")
+      .deleteOne({ "data.reminder._id": new mongoose.Types.ObjectId(_id) });
+    console.log(result);
+    if (result) {
+      res.status(200).json({ message: "Deleted Successfully" });
+    } else {
+      res.status(400).json({ message: "An error occurred" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json(error);
+  }
+};
+
+module.exports.deleteReminderFromAgendaJobs = async (req, res) => {
+  try {
+    const reminderResult = await Reminder.find({}, "_id");
+    const reminderArray = reminderResult.map((item) => item._id);
+    const agendaJobs = await mongoose.connection.db
+      .collection("agendaJobs")
+      .deleteMany({ "data.reminder._id": { $nin: reminderArray } });
+    if (agendaJobs) {
+      res.status(200).json({ agendaJobs });
     }
   } catch (error) {
     console.log(error);

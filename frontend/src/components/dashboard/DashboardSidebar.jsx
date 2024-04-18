@@ -38,7 +38,7 @@ const DashboardSidebar = () => {
             </div>
             <div>
               {/* <p>Upcoming Events</p> */}
-              <div className="bg-slate-100 dark:bg-slate-800 h-[30rem] mt-10 rounded-md ">
+              <div className="bg-slate-100 dark:bg-slate-800 h-[28rem] mt-10 rounded-md ">
                 <UpcomingReminders reminders={data} />
               </div>
             </div>

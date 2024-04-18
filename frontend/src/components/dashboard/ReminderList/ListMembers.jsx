@@ -15,7 +15,9 @@ import {
 import React from "react";
 
 const ListMembers = ({ data }) => {
-  const visibleData = data && data.slice(0, 4);
+  const visibleData =
+    data && data.length < 4 ? data.slice(0) : data.slice(0, 4);
+  // const visibleData = data && data.slice(0, 4);
   const hiddenUsers = data && data.slice(4);
   return (
     // <TooltipProvider>

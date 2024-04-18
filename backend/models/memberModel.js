@@ -9,22 +9,25 @@ const memberSchema = new mongoose.Schema(
     },
     lastname: {
       type: String,
-      required: true,
     },
     email: {
       type: String,
-      required: true,
       unique: true,
     },
     phonenumber: {
       type: String,
-      required: true,
       unique: true,
+      sparse: true,
     },
     slackId: {
       type: String,
-      required: true,
       unique: true,
+      sparse: true,
+    },
+    discordId: {
+      type: String,
+      unique: true,
+      sparse: true,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,

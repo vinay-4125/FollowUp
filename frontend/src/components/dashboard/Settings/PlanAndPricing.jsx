@@ -10,12 +10,12 @@ import {
 import { Check } from "lucide-react";
 
 const checkPoints = [
-  "Unlimited Posts",
-  "Unlimited Users",
-  "Custom domain",
-  // "Dashboard Analytics",
+  "Unlimited Reminders",
+  "Slack & Whatsapp Integration",
+  "10+ team members",
+  "Dashboard Analytics",
+  "Premium Support",
   // "Access to Discord",
-  // "Premium Support",
 ];
 
 const PlanAndPricing = () => {
@@ -34,10 +34,12 @@ const PlanAndPricing = () => {
               What&apos;s included in the PRO plan
             </h3>
             <ul className="grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
-              <li className="flex items-center">
-                <Check className="mr-2 h-4 w-4" /> Unlimited Posts
-              </li>
-              <li className="flex items-center">
+              {checkPoints.map((item, index) => (
+                <li key={index} className="flex items-center">
+                  <Check className="mr-2 h-4 w-4" /> {item}
+                </li>
+              ))}
+              {/* <li className="flex items-center">
                 <Check className="mr-2 h-4 w-4" /> Unlimited Users
               </li>
 
@@ -52,12 +54,12 @@ const PlanAndPricing = () => {
               </li>
               <li className="flex items-center">
                 <Check className="mr-2 h-4 w-4" /> Premium Support
-              </li>
+              </li> */}
             </ul>
           </div>
           <div className="flex flex-col gap-4 text-center">
             <div>
-              <h4 className="text-7xl font-bold">$19</h4>
+              <h4 className="text-7xl font-bold">₹150</h4>
               <p className="text-sm font-medium text-muted-foreground">
                 Billed Monthly
               </p>

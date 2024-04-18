@@ -1,21 +1,38 @@
 import ThemeToggle from "@/components/ThemeToggle";
+import { Button } from "@/components/ui/button";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import axios from "axios";
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { Dot } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const SuperAdminLogin = () => {
-  const [value, setValue] = useState("");
+  const [password, setPassword] = useState("");
+  const [correct, setCorrect] = useState(true);
   const navigate = useNavigate();
   const handleChange = (value) => {
-    setValue(value);
-    if (value == "123456") {
-      navigate("/superadmin/dashboard");
+    setPassword(value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("/api/superadminlogin", { password });
+      if (res.status === 200) {
+        navigate("/superadmin/dashboard");
+      } else {
+        setPassword("");
+        setCorrect(false);
+      }
+    } catch (error) {
+      setCorrect(false);
+      console.log(error);
     }
   };
   return (
@@ -47,35 +64,73 @@ const SuperAdminLogin = () => {
           </div>
         </nav>
       </div>
-      <div className="flex flex-col h-screen gap-5 max-h-full justify-center items-center">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col h-screen gap-5 max-h-full justify-center items-center"
+      >
         <h1 className="flex sm:flex-row flex-col text-center">
           SuperAdmin <Dot className="hidden sm:block" size={52} /> Login
         </h1>
         <InputOTP
           maxLength={6}
-          value={value}
+          value={password}
           onChange={(value) => handleChange(value)}
         >
-          <InputOTPGroup>
-            <InputOTPSlot index={0} />
-            <InputOTPSlot index={1} />
-            <InputOTPSlot index={2} />
-          </InputOTPGroup>
-          <InputOTPSeparator />
-          <InputOTPGroup>
-            <InputOTPSlot index={3} />
-            <InputOTPSlot index={4} />
-            <InputOTPSlot index={5} />
-          </InputOTPGroup>
+          <div
+            className={`flex items-center ${correct ? "" : "animate-shake"}`}
+          >
+            <InputOTPGroup>
+              <InputOTPSlot
+                className={`flex items-center  ${
+                  correct ? "" : "border border-l-red-500 border-y-red-500"
+                }`}
+                index={0}
+              />
+              <InputOTPSlot
+                className={`flex items-center  ${
+                  correct ? "" : "border border-red-500"
+                }`}
+                index={1}
+              />
+              <InputOTPSlot
+                className={`flex items-center ${
+                  correct ? "" : "border border-y-red-500 border-r-red-500"
+                }`}
+                index={2}
+              />
+            </InputOTPGroup>
+            <InputOTPSeparator />
+            <InputOTPGroup>
+              <InputOTPSlot
+                className={`flex items-center ${
+                  correct ? "" : "border border-l-red-500 border-y-red-500"
+                }`}
+                index={3}
+              />
+              <InputOTPSlot
+                className={`flex items-center  ${
+                  correct ? "" : "border border-red-500"
+                }`}
+                index={4}
+              />
+              <InputOTPSlot
+                className={`flex items-center  ${
+                  correct ? "" : "border border-y-red-500 border-r-red-500"
+                }`}
+                index={5}
+              />
+            </InputOTPGroup>
+          </div>
         </InputOTP>
         <div className="text-center text-sm">
-          {value === "" ? (
-            <>Enter your one-time password.</>
+          {password === "" ? (
+            <>Enter your password.</>
           ) : (
-            <>You entered: {value}</>
+            <>You entered: {password}</>
           )}
         </div>
-      </div>
+        <Button type="submit">Submit</Button>
+      </form>
     </>
   );
 };

@@ -2,8 +2,10 @@ const Member = require("../models/memberModel");
 const User = require("../models/userModel");
 
 module.exports.addMembers = async (req, res) => {
-  const { firstname, lastname, email, phonenumber, slackId, userId } = req.body;
+  let { firstname, lastname, email, phonenumber, slackId, userId } = req.body;
   try {
+    if (phonenumber === null) phonenumber = "";
+
     const member = await Member.create({
       firstname,
       lastname,
@@ -56,14 +58,29 @@ module.exports.getMemberFullname = async (req, res) => {
 };
 
 module.exports.updateMember = async (req, res) => {
-  const { _id, firstname, lastname, email, phonenumber, slackId } = req.body;
+  let { _id, firstname, lastname, email, phonenumber, slackId } = req.body;
+  if (phonenumber === null) phonenumber = "";
   try {
+    // if (phonenumber !== "") {
+    //   const findUniquePhonenumber = await Member.findOne({ phonenumber });
+    //   if (findUniquePhonenumber) {
+    //     return res
+    //       .status(400)
+    //       .json({ message: "Phonenumber should be unique" });
+    //   }
+    // }
+    // if (slackId !== "") {
+    //   const findUniqueSlackId = await Member.findOne({ slackId });
+    //   if (findUniqueSlackId) {
+    //     return res.status(400).json({ message: "SlackId should be unique" });
+    //   }
+    // }
     const updatedMember = await Member.findByIdAndUpdate(
       { _id },
       { firstname, lastname, email, phonenumber, slackId }
     );
     if (!updatedMember) {
-      res.status(400).json({ message: "Internal server error" });
+      return res.status(400).json({ message: "Internal server error" });
     }
     res.status(200).json({ message: "Member updated" });
   } catch (error) {
@@ -87,5 +104,30 @@ module.exports.deleteMember = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(400).json({ error });
+  }
+};
+
+module.exports.getMemberbyUserNotification = async (req, res) => {
+  let { fields } = req.query;
+  // const fields = ["slackId"];
+
+  try {
+    const query = {};
+    fields.forEach((field) => {
+      query[field] = { $exists: true, $ne: "" };
+    });
+
+    const members = await Member.find(query);
+
+    if (members.length === 0) {
+      res
+        .status(404)
+        .json({ message: "No members found with the selected fields" });
+    } else {
+      res.json({ members });
+    }
+  } catch (error) {
+    console.error("Error fetching members:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };

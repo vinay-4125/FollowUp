@@ -5,6 +5,11 @@ const adminMenuItems = [
     icon: "dashboard",
   },
   {
+    title: "User Analytics",
+    href: "/superadmin/dashboard/useranalytics",
+    icon: "user",
+  },
+  {
     title: "Settings",
     href: "/superadmin/dashboard/settings",
     icon: "settings",

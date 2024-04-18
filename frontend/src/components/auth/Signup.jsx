@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, redirect, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
-import { Toaster, toast } from "sonner";
+import { toast, Toaster } from "sonner";
 import { setUserLocalStorage } from "@/redux/slice/userSlice";
 import { useDispatch } from "react-redux";
 
@@ -146,7 +146,7 @@ const Signup = () => {
             </div>
             <Button
               type="submit"
-              className="w-full p-6 mt-10 dark:black"
+              className="w-full p-6 mt-10 dark:bg-black dark:text-white"
 
               // className="w-full block bg-indigo-500 hover:bg-indigo-400 focus:bg-indigo-400 text-white font-semibold rounded-lg
               // px-4 py-3 mt-6"

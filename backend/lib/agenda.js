@@ -8,6 +8,9 @@ const { App, LogLevel } = require("@slack/bolt");
 const { registerListeners } = require("./listeners");
 const manifest = require("../manifest.json");
 const { _userId } = require("../controllers/userController");
+const Member = require("../models/memberModel");
+const { sendMessageToSlack } = require("./listeners/messages/messages");
+const { discordFunc } = require("./discordJob");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -50,6 +53,7 @@ const customRoutes = [
     },
   },
 ];
+
 let userId = "";
 const getUserId = (req, res) => {
   const { _userId } = req.body;
@@ -85,6 +89,8 @@ const slackapp = new App({
           { _id: userId },
           { slackId: installation.user.id }
         );
+        // await Member.findOneAndUpdate();
+
         return await workspaceAuth.saveUserWorkspaceInstall(
           installation,
           userId
@@ -109,7 +115,33 @@ const slackapp = new App({
   },
 });
 
-registerListeners(slackapp);
+const discordClient = discordFunc();
+// discordClient.once("", (message) => {
+//   console.log(message.guild.id);
+//   console.log(message.content);
+// });
+
+
+
+// slackapp.event("app_installed", async ({ event, client }) => {
+//   console.log("app_installed");
+//   try {
+//     const response = await client.users.list();
+//     const membersDetails = response.members.filter(
+//       (bot) => bot.is_bot !== true
+//     );
+//     for (const user of membersDetails) {
+//       const newMember = await Member.create({
+//         firstname: user.real_name,
+//         slackId: user.id,
+//         userId,
+//       });
+//     }
+//     console.log("Members added to the database");
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
 const agenda = new Agenda({ db: { address: process.env.MONGODBURL } });
 
@@ -119,6 +151,10 @@ const funcIO = (io) => {
     const user = await User.findById(jobVariable._userId).select(
       "-profilePicture"
     );
+    const memberIds = jobVariable.listMembers;
+    const members = await Member.find({ _id: { $in: memberIds } });
+    const emailMembers = members.map((item, index) => item.email);
+    const slackMembers = members.map((item, index) => item.slackId);
     // console.log(user);
 
     //   if (reminder.repeat) {
@@ -134,7 +170,7 @@ const funcIO = (io) => {
         name: "FollowUp.",
         address: process.env.MYEMAIL,
       }, // sender address
-      to: jobVariable.listMembers, // list of receivers
+      to: emailMembers, // list of receivers
       subject: jobVariable.reminderName, // Subject line
       text: jobVariable.description, // plain text body
       // html: "<b>Hello world?</b>", // html body
@@ -172,6 +208,17 @@ const funcIO = (io) => {
 
     if (jobVariable.notification.includes("Slack")) {
       console.log(`Sending msg to slack`);
+      try {
+        for (const userId of slackMembers) {
+          console.log(userId);
+          slackapp.client.chat.postMessage({
+            channel: userId,
+            text: `Reminder: Don't forget about "${jobVariable.reminderName} - ${jobVariable.description}"`,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
     // } else {
     //   console.log(`Reminder with ID ${reminderId} not found. Cancelling job.`);
@@ -179,6 +226,8 @@ const funcIO = (io) => {
     // }
   });
 };
+
+registerListeners(slackapp);
 
 (async () => {
   try {

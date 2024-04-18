@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../ui/select";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -207,7 +207,7 @@ const UpdateReminder = () => {
   return (
     <>
       {formData && (
-        <div className="flex-1 max-h-full overflow-auto space-y-4 p-4 md:p-8 pt-6">
+        <div className="flex-1  overflow-hidden space-y-4 p-4 md:p-8 pt-6">
           <BreadCrumb items={breadcrumbItems} />
           <div className="flex items-start justify-between">
             <Heading title={`Update Reminder`} />
@@ -465,10 +465,11 @@ const UpdateReminder = () => {
               <Button type="submit">Update</Button>
 
               <div className="mt-5">
-                <pre>{JSON.stringify(form.watch(), null, 2)}</pre>
+                {/* <pre>{JSON.stringify(form.watch(), null, 2)}</pre> */}
               </div>
             </form>
           </Form>
+          <Toaster/>
         </div>
       )}
     </>

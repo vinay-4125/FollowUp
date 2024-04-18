@@ -40,7 +40,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Toaster, toast } from "sonner";
+import { toast, Toaster } from "sonner";
+
 
 const formSchema = yup.object({
   eventName: yup.string().required(),

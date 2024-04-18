@@ -27,6 +27,18 @@ routes.get("/oauth", authController.oauth);
 
 routes.get("/alluserdetaildata/:userId", authController.getUserDetailData);
 
+routes.get(
+  "/singleUserTotalReminders",
+  authController.singleUserTotalReminders
+);
+
+routes.get("/discordBotUrl", authController.discordBotUrl);
+
+// routes.post(
+//   "/addUserIdAndMembersForDiscord",
+//   authController.addUserIdAndMembersForDiscord
+// );
+
 // routes.post("/sendUserId", authController.sendUserId);
 
 // routes.get("/getuserid", authController.getUserId);

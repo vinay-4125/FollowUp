@@ -24,6 +24,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       // unique: true,
     },
+    discordId: {
+      type: String,
+    },
     phonenumber: {
       type: String,
       // unique: true,

@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import SuperAdminLineChart from "./SuperAdminLineChart";
 
 const SuperAdminDashboardBody = () => {
   const queryClient = useQueryClient();
@@ -32,8 +33,14 @@ const SuperAdminDashboardBody = () => {
     //   queryKey: ["fetchTotalReminders"],
     //   refetchType: "all",
     // });
-    await queryClient.invalidateQueries({ queryKey: ["fetchTotalReminders"] });
-    await queryClient.invalidateQueries({ queryKey: ["fetchChartData"] });
+    // setTimeout(async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ["fetchTotalReminders"],
+    });
+    await queryClient.invalidateQueries({
+      queryKey: ["fetchChartData"],
+    });
+    // }, 3000);
   };
   // const handleDatePicker = async (selectedData) => {
   //   setDate(selectedData);
@@ -65,11 +72,27 @@ const SuperAdminDashboardBody = () => {
     return res.data.result;
   };
 
+  const fetchFailedReminders = async () => {
+    const res = await axios.get("/api/getFailedCount");
+    return res.data.result[0].totalDocuments;
+  };
+
+  const fetchSuccessReminders = async () => {
+    const res = await axios.get("/api/getSuccessCount");
+    return res.data.result[0].totalDocuments;
+  };
+
+  const fetchTotalSuccessReminders = async () => {
+    const res = await axios.get("/api/getTotalNumberOfSuccessReminders");
+    return res.data.result;
+  };
+
   const { data: totalReminders } = useQuery({
     queryKey: ["fetchTotalReminders"],
     queryFn: fetchTotalReminders,
-    enabled: !!date.from && !!date.to,
+    enabled: !!date?.from && !!date?.to,
   });
+
   const { data: totalUsers } = useQuery({
     queryKey: ["fetchTotalUsers"],
     queryFn: fetchTotalUsers,
@@ -78,7 +101,22 @@ const SuperAdminDashboardBody = () => {
   const { data: chartData } = useQuery({
     queryKey: ["fetchChartData"],
     queryFn: fetchChartData,
-    enabled: !!date.from && !!date.to,
+    enabled: !!date?.from && !!date?.to,
+  });
+
+  const { data: failedReminders } = useQuery({
+    queryKey: ["fetchFailedReminders"],
+    queryFn: fetchFailedReminders,
+  });
+
+  const { data: successReminders } = useQuery({
+    queryKey: ["fetchSuccessReminders"],
+    queryFn: fetchSuccessReminders,
+  });
+
+  const { data: successChartData } = useQuery({
+    queryKey: ["fetchTotalSuccessReminders"],
+    queryFn: fetchTotalSuccessReminders,
   });
 
   // console.log("charts", totalReminders);
@@ -89,15 +127,25 @@ const SuperAdminDashboardBody = () => {
       icon: "calendar",
     },
     {
-      title: "Total Reminders",
+      title: "Total Users",
       odometerValue: totalUsers,
       icon: "user",
+    },
+    {
+      title: "Success Reminders",
+      odometerValue: successReminders,
+      icon: "trendingUp",
+    },
+    {
+      title: "Failed Reminders",
+      odometerValue: failedReminders,
+      icon: "trendingDown",
     },
   ];
 
   return (
     <>
-      <div className="flex-1 h-screen space-y-4 p-4 md:p-8 pt-6">
+      <div className="flex-1 max-h-full overflow-y-auto space-y-4 p-4 md:p-8 pt-6">
         <div className="flex items-center justify-between space-y-2">
           <h3 className="text-3xl font-bold tracking-tight">
             Hi, Welcome back 👋
@@ -133,7 +181,7 @@ const SuperAdminDashboardBody = () => {
                   <Calendar
                     initialFocus
                     mode="range"
-                    // defaultMonth={date?.from}
+                    defaultMonth={date?.from}
                     selected={date}
                     onSelect={handleSelectDate}
                     numberOfMonths={2}
@@ -147,8 +195,10 @@ const SuperAdminDashboardBody = () => {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <SuperAdminCard items={cardData} />
         </div>
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
+
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-8">
           {chartData && <SuperAdminBigCard items={chartData} />}
+          {successChartData && <SuperAdminLineChart items={successChartData} />}
         </div>
       </div>
     </>

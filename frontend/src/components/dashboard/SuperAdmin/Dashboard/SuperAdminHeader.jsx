@@ -3,6 +3,7 @@ import React from "react";
 import SuperAdminMobileSidebar from "./SuperAdminMobileSidebar";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const SuperAdminHeader = () => {
   return (
@@ -32,6 +33,9 @@ const SuperAdminHeader = () => {
         </div>
 
         <div className="flex items-center gap-5">
+          <Avatar>
+            <AvatarFallback>SA</AvatarFallback>
+          </Avatar>
           <ThemeToggle />
         </div>
       </nav>

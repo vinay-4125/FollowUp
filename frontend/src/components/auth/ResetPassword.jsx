@@ -87,7 +87,9 @@ const ResetPassword = () => {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full block text-white font-semibold rounded-lg px-4 py-3 mt-6"
+                  className="w-full p-6 mt-6 dark:bg-black dark:text-white"
+
+                  // className="w-full block text-white font-semibold rounded-lg px-4 py-3 mt-6 dark:bg-black dark:text-white"
                 >
                   Submit
                 </Button>

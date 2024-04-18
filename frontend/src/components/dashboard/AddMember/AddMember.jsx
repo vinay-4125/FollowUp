@@ -2,7 +2,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { Plus } from "lucide-react";
+import { Plus, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import BreadCrumb from "../Breadcrumb";
 import MemberTable from "./MemberTable";
@@ -10,6 +10,12 @@ import MemberAction from "./MemberAction";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const breadcrumbItems = [{ title: "Member", link: "/dashboard/Member" }];
 
@@ -45,7 +51,37 @@ const AddMember = () => {
       accessorKey: "phonenumber",
     },
     {
-      header: "Slack-ID",
+      // header: "Slack-ID",
+      header: (
+        <div className="flex items-center gap-1">
+          SlackId
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-circle-help"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                  <path d="M12 17h.01" />
+                </svg>
+              </TooltipTrigger>
+              <TooltipContent className="w-40">
+                <p>To add slack member integrate followup with slack</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      ),
       accessorKey: "slackId",
     },
     {

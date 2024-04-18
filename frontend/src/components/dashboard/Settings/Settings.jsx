@@ -41,7 +41,7 @@ const Settings = () => {
   return (
     <>
       {/* <div className="flex-1 max-h-full overflow-auto space-y-4 p-4 md:p-8 pt-6"> */}
-      <div className="flex-1 max-h-full overflow-x-hidden space-y-4 p-4 md:p-8 pt-6">
+      <div className="flex-1 overflow-hidden space-y-4 p-4 md:p-8 pt-6">
         <BreadCrumb items={breadcrumbItems} />
 
         <div>

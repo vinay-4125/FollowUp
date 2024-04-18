@@ -24,7 +24,7 @@ const SuperAdminCard = ({ items }) => {
                   <Odometer value={item.odometerValue} format="(,ddd).dd" />
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  +20.1% from last month
+                  +20.1% from last month(Dummy Text)
                 </p>
               </CardContent>
             </Card>

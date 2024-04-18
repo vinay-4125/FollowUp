@@ -2,7 +2,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { AlignLeft } from "lucide-react";
 import { useMemo, useState } from "react";
 import SuperAdminMobileNav from "./SuperAdminMobileNav";
-import adminMenuItems from "./adminMenuItems";
+import adminMenuItems from "./superadminMenuItems";
 
 const SuperAdminMobileSidebar = () => {
   const [open, setOpen] = useState(false);

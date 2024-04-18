@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { useMemo } from "react";
 import SuperAdminNav from "./SuperAdminNav";
-import adminMenuItems from "./adminMenuItems";
+import adminMenuItems from "./superadminMenuItems";
 
 const SuperAdminSidebar = () => {
   const items = useMemo(() => adminMenuItems, []);
@@ -13,7 +13,7 @@ const SuperAdminSidebar = () => {
         <div className="px-3 py-2">
           <div className="space-y-1">
             <h2 className="mb-2 px-4 text-xl font-semibold tracking-tight">
-             SuperAdmin
+              SuperAdmin
             </h2>
             <SuperAdminNav items={items} />
           </div>

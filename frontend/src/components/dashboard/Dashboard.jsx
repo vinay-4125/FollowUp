@@ -3,7 +3,8 @@ import DashboardSidebar from "./DashboardSidebar";
 import DashboardHeader from "./DashboardHeader";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
-import { Toaster, toast } from "sonner";
+import { toast, Toaster } from "sonner";
+import { ScrollArea } from "../ui/scroll-area";
 
 const Dashboard = () => {
   useEffect(() => {
@@ -15,10 +16,12 @@ const Dashboard = () => {
   return (
     <>
       <DashboardHeader />
-      <div className="flex h-screen overflow-hidden">
+      <div className="flex overflow-hidden">
         {/* <div className="h-screen hidden lg:block fixed top-0 w-1/6"> */}
-        <div className="fixed">
-          <DashboardSidebar />
+        <div className="fixed overflow-hidden">
+          <ScrollArea className="h-full">
+            <DashboardSidebar />
+          </ScrollArea>
         </div>
         <main className="w-full pt-14 lg:ml-72 overflow-hidden">
           <Outlet />

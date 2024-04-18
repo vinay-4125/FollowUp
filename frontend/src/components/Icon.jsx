@@ -25,6 +25,8 @@ import {
   SunMedium,
   TableProperties,
   Trash,
+  TrendingDown,
+  TrendingUp,
   User,
   User2Icon,
   UserPlus,
@@ -63,6 +65,8 @@ export const Icons = {
   check: Check,
   calendar: CalendarDays,
   calendarRange: CalendarRange,
+  trendingDown: TrendingDown,
+  trendingUp: TrendingUp,
   // gitHub: ({ ...props }) => (
   //   <svg
   //     aria-hidden="true"

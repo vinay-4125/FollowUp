@@ -25,6 +25,7 @@ const ReminderListCal = () => {
       time: reminder.time,
       notification: reminder.notification,
       repeat: reminder.repeat,
+      listMembers: reminder.listMembers,
     }));
     // const reminders = res.data.allData.map((event) => ({
     //   title: event.data.reminder.reminderName,
@@ -109,7 +110,7 @@ const ReminderListCal = () => {
   };
 
   return (
-    <div className="h-screen mt-5 md:pb-16 overflow-y-auto">
+    <div className="h-screen mt-5 overflow-hidden">
       <Calendar
         localizer={localizer}
         events={reminders}

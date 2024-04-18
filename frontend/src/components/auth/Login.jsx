@@ -2,9 +2,10 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
-import { Toaster, toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { setUserLocalStorage } from "@/redux/slice/userSlice";
+import { toast, Toaster } from "sonner";
+
 
 const Login = () => {
   const navigate = useNavigate();

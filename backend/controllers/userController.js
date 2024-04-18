@@ -4,6 +4,9 @@ const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
 const { OAuth2Client } = require("google-auth-library");
 const axios = require("axios");
+const ArrayReminder = require("../models/arrayReminderModel");
+const { default: mongoose } = require("mongoose");
+const { discordFunc } = require("../lib/discordJob");
 
 const secret = process.env.SECRET;
 const maxAge = 3 * 24 * 60 * 60;
@@ -127,7 +130,7 @@ module.exports.resetPassword = async (req, res) => {
   const { id } = req.params;
   const { password } = req.body;
   // const token = req.cookies.jwt;
-  const token = createToken(id)
+  const token = createToken(id);
   jwt.verify(token, process.env.SECRET, async (err, decode) => {
     if (err) {
       return res.status(400).json({ message: "Invalid token" });
@@ -348,3 +351,25 @@ module.exports.updateUserSlackId = (req, res) => {
 //     res.status(400).json({ error });
 //   }
 // };
+
+module.exports.singleUserTotalReminders = async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const result = await ArrayReminder.findOne({ userId });
+    const remindersCount = result.reminders.length;
+    res.status(200).json({ remindersCount });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+};
+
+module.exports.discordBotUrl = async (req, res) => {
+  try {
+    res.status(200).json({
+      url: `https://discord.com/oauth2/authorize?client_id=${process.env.DISCORD_BOT_ID}&permissions=8&scope=bot`,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

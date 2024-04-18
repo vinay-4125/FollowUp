@@ -5,6 +5,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { CalendarIcon, Clock } from "lucide-react";
+import ListMembers from "../ReminderList/ListMembers";
 
 const HoverInfoCard = ({ event }) => {
   return (
@@ -37,15 +38,19 @@ const HoverInfoCard = ({ event }) => {
                 </span>
               </div>
             </div>
-            <div className="pt-2 flex gap-1">
-              {event.notification.map((item, index) => (
-                <Badge
-                  // style={{ backgroundColor: event.backgroundColor }}
-                  key={index}
-                >
-                  {item}
-                </Badge>
-              ))}
+            <div className="pt-2 flex w-full justify-between gap-1">
+              <div>
+                {event.notification.map((item, index) => (
+                  <Badge
+                    // style={{ backgroundColor: event.backgroundColor }}
+                    key={index}
+                    className="h-fit"
+                  >
+                    {item}
+                  </Badge>
+                ))}
+              </div>
+              <ListMembers data={event.listMembers} />
             </div>
           </div>
         </div>

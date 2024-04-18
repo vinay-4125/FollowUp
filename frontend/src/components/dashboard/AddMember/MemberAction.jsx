@@ -20,10 +20,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Toaster } from "@/components/ui/sonner";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import { toast, Toaster } from "sonner";
 
 const MemberAction = ({ data }) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);

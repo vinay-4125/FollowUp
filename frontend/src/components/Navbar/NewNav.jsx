@@ -50,11 +50,11 @@ const NewNav = () => {
     //     </div>
     //   </div>
     // </nav>
-    <nav className="w-full my-5">
+    <nav className="py-2 bg-black/0 backdrop-blur-lg supports-backdrop-blur:bg-background/60 border-b z-20 fixed w-full">
       <div className="items-center px-4 max-w-screen-xl mx-auto md:flex md:px-8">
         <div className="flex items-center justify-between md:block">
           <Link to="/">
-            <h1 className="">FollowUp.</h1>
+            <h1 className="text-5xl">FollowUp.</h1>
           </Link>
           <div className="md:hidden">
             <Button
@@ -92,6 +92,7 @@ const NewNav = () => {
               </>
             )}
             <li>
+              
               <ThemeToggle />
             </li>
           </ul>

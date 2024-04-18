@@ -124,20 +124,32 @@ module.exports.getallmembers = async ({ ack, say, client }) => {
   await ack();
 
   try {
-    // Call the API to get the list of all users in the workspace
     const result = await client.users.list();
+    let count = 0;
+    const membersDetails = result.members.filter(
+      (bot) => bot.is_bot !== true && bot.real_name !== "Slackbot"
+    );
+    // .map((member) => [member.id + " : " + member.real_name]);
 
-    // Extract user IDs from the response
-    const membersDetails = result.members
-      .filter((bot) => bot.is_bot !== true)
-      .map((member) => [member.id, member.real_name, member.profile.phone]);
-
-    const addMembers = await Member.find();
-    await say(`All members' IDs: ${membersDetails.join(" | ")}`);
+    for (const user of membersDetails) {
+      const addMembers = await Member.create({
+        firstname: user.real_name || "usertest",
+        slackId: user.id,
+        email: `abc${count}@gmail.com`,
+        userId: "65e59ed5f743fbd023c6a69d",
+        phonenumber: user.phone,
+      });
+      count++;
+    }
+    console.log("Members added");
+    // await say(`All members' IDs: ${membersDetails.join(" | ")}`);
+    await say(`All members' IDs: ${membersDetails}`);
   } catch (error) {
     console.error("Error getting members:", error);
   }
 };
+
+
 
 // {
 //   "ok": true,

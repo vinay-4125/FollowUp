@@ -16,8 +16,9 @@ import { Input } from "@/components/ui/input";
 import BreadCrumb from "../Breadcrumb";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import { Toaster, toast } from "sonner";
+import { toast, Toaster } from "sonner";
 import axios from "axios";
+
 const breadcrumbItems = [
   { title: "Member", link: "/dashboard/addmember" },
   { title: "Update", link: "/dashboard/member/update" },
@@ -27,8 +28,17 @@ const formSchema = yup.object({
   firstname: yup.string().min(1),
   lastname: yup.string().min(1),
   email: yup.string().email(),
-  slackId: yup.string().min(1),
-  phonenumber: yup.string().min(10).max(10),
+  slackId: yup.string(),
+  phonenumber: yup
+    .string()
+    .min(10, "Phone number must be exactly 10 characters")
+    .max(10, "Phone number must be exactly 10 characters")
+    .nullable()
+    .transform((value, originalValue) => {
+      // Transform empty string to null to make it optional
+      return originalValue === "" ? null : originalValue;
+    })
+    .optional(),
 });
 
 const UpdateMember = () => {
@@ -54,8 +64,7 @@ const UpdateMember = () => {
       toast.success("Member updated");
       navigate("/dashboard/addmember");
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
   //   console.log("state", state);
@@ -160,7 +169,7 @@ const UpdateMember = () => {
           <Button type="submit">Update</Button>
         </form>
       </Form>
-      <pre>{JSON.stringify(form.watch(), null, 2)}</pre>
+      {/* <pre>{JSON.stringify(form.watch(), null, 2)}</pre> */}
       <Toaster position="bottom-left" />
     </div>
   );

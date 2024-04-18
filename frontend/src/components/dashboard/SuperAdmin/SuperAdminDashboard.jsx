@@ -2,7 +2,7 @@ import React from "react";
 import DashboardHeader from "../DashboardHeader";
 import DashboardSidebar from "../DashboardSidebar";
 import { Outlet } from "react-router-dom";
-import { Toaster } from "@/components/ui/sonner";
+import { toast, Toaster } from "sonner";
 import SuperAdminSidebar from "./Dashboard/SuperAdminSidebar";
 import SuperAdminHeader from "./Dashboard/SuperAdminHeader";
 

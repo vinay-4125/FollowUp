@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { Toaster, toast } from "sonner";
+import { toast, Toaster } from "sonner";
 import { useDispatch } from "react-redux";
 import { updateUserLocalStorage } from "@/redux/slice/userSlice";
 import ProfilePicture from "./ProfilePicture";
@@ -146,7 +146,7 @@ const PersonalDetails = ({ user }) => {
         </form>
       </Form>
       <div className="mt-5">
-        <pre>{JSON.stringify(form.watch(), null, 2)}</pre>
+        {/* <pre>{JSON.stringify(form.watch(), null, 2)}</pre> */}
       </div>
       <Toaster position="bottom-left" />
     </>

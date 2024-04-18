@@ -21,7 +21,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Toaster } from "@/components/ui/sonner";
+import { toast, Toaster } from "sonner";
+
 import axios from "axios";
 import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";

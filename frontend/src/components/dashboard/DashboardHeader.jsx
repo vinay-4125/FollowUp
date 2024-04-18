@@ -4,6 +4,7 @@ import { MobileSidebar } from "./MobileSidebar";
 import ThemeToggle from "../ThemeToggle";
 import UserNav from "./UserNav";
 import EventFormTwo from "./EventFormTwo";
+import EventFormThree from "./EventFormThree";
 
 const DashboardHeader = () => {
   return (
@@ -36,7 +37,8 @@ const DashboardHeader = () => {
           {/* <UserNav /> */}
           {/* <EventForm /> */}
           {/* <EventFormOne /> */}
-          <EventFormTwo />
+          {/* <EventFormTwo /> */}
+          <EventFormThree />
           {/* {user && <h6>{user?.username}</h6>} */}
           <UserNav />
           <ThemeToggle />
